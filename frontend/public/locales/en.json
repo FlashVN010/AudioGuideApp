@@ -1,7 +1,8 @@
 {
   "common": {
-    "appName": "VK Food Explorer",
-    "appDescription": "Discover the best street food in Vinh Khanh",
+    "appName": "Vĩnh Khánh Guide",
+    "appDescription": "Auto audio guide for Vinh Khanh street food district",
+    "appTagline": "Explore street food through voice",
     "loading": "Loading...",
     "error": "Something went wrong",
     "retry": "Try again",
@@ -25,24 +26,30 @@
   },
   "nav": {
     "map": "Map",
-    "list": "List",
+    "list": "Places",
     "tours": "Tours",
-    "more": "More"
+    "more": "More",
+    "login": "Sign in",
+    "adminDashboard": "Admin",
+    "ownerDashboard": "Dashboard"
+  },
+  "header": {
+    "searchPlaceholder": "Search food spots..."
   },
   "search": {
-    "placeholder": "Search for food spots...",
+    "placeholder": "Search places...",
     "filterAll": "All",
     "filterByCategory": "Filter by category",
     "filterByPrice": "Filter by price",
-    "resultsCount": "{{count}} places found",
+    "resultsCount": "{{count}} places",
     "noResultsTitle": "No places found",
     "noResultsDesc": "Try a different search term or filter"
   },
   "filter": {
-    "priceAll": "All",
-    "priceBudget": "Budget",
-    "priceMidrange": "Mid-range",
-    "priceUpscale": "Upscale"
+    "priceAll": "All prices",
+    "priceBudget": "Budget ($)",
+    "priceMidrange": "Mid-range ($$)",
+    "priceUpscale": "Upscale ($$$)"
   },
   "poi": {
     "address": "Address",
@@ -54,35 +61,48 @@
     "menu": "Menu",
     "menuItems": "Menu items",
     "noMenu": "No menu available",
-    "getDirections": "Get directions",
+    "getDirections": "Directions",
     "viewOnMap": "View on map",
     "rating": "Rating",
     "reviews": "reviews",
+    "noRating": "New",
     "reviewPlace": "Review this place",
     "reviewDesc": "Share your experience at",
-    "yourName": "Your Name",
+    "yourName": "Full name",
     "namePlaceholder": "Enter your name",
-    "yourPhone": "Phone Number",
+    "yourPhone": "Phone number",
     "phonePlaceholder": "Enter your phone number",
     "comment": "Comment (Optional)",
-    "commentPlaceholder": "Share more about your experience...",
-    "submitReview": "Submit Review",
-    "reviewSuccess": "Your review has been submitted successfully!",
-    "reviewError": "An error occurred while submitting your review.",
+    "commentPlaceholder": "Tell us more about your experience...",
+    "submitReview": "Submit review",
+    "reviewSuccess": "Thank you! Your review has been submitted.",
+    "reviewError": "Something went wrong. Please try again.",
     "distance": "{{distance}} away",
     "closed": "Closed",
-    "open": "Open"
+    "open": "Open now",
+    "addFavorite": "Save place",
+    "removeFavorite": "Unsave"
   },
   "audio": {
-    "title": "Audio Guide",
+    "title": "Auto Audio Guide",
     "play": "Play",
     "pause": "Pause",
     "stop": "Stop",
-    "loading": "Loading audio...",
-    "unavailable": "Audio not available",
-    "transcriptTitle": "Audio Transcript",
-    "showTranscript": "Show",
-    "hideTranscript": "Hide"
+    "loading": "Generating audio guide...",
+    "unavailable": "No audio available",
+    "fetchFailed": "Could not load audio guide",
+    "playbackFailed": "Unable to play audio",
+    "loadError": "Error loading audio file",
+    "translateFailed": "Could not translate to selected language",
+    "transcriptTitle": "Transcript",
+    "showTranscript": "Show text",
+    "hideTranscript": "Hide",
+    "selectLanguage": "Language:",
+    "seekLabel": "Seek audio",
+    "volumeLabel": "Volume",
+    "playing": "Playing",
+    "mute": "Mute",
+    "unmute": "Unmute"
   },
   "map": {
     "myLocation": "My location",
@@ -92,10 +112,18 @@
     "clusterCount": "{{count}} places",
     "viewDetails": "View details"
   },
+  "tour": {
+    "title": "Guided Tours",
+    "stops": "stops",
+    "distance": "km",
+    "duration": "min",
+    "startTour": "Start tour",
+    "noTours": "No tours available"
+  },
   "admin": {
     "login": {
-      "title": "Admin Login",
-      "subtitle": "Sign in to manage VK Food Explorer",
+      "title": "System Login",
+      "subtitle": "Manage Vĩnh Khánh Guide content",
       "username": "Username",
       "password": "Password",
       "submit": "Sign in",
@@ -111,24 +139,24 @@
       "logout": "Sign out"
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "System Overview",
       "totalPlaces": "Total Places",
       "totalVisits": "Total Visits",
-      "totalAudioPlays": "Audio Plays",
+      "totalAudioPlays": "Audio Guide Plays",
       "totalQrScans": "QR Scans",
       "visitsOverTime": "Visits Over Time",
       "popularPlaces": "Popular Places",
-      "languageBreakdown": "Language Breakdown",
+      "languageBreakdown": "Visitor Languages",
       "visits": "visits",
       "noData": "No data yet"
     },
     "pois": {
-      "title": "Manage Places",
+      "title": "Manage Food Places",
       "addNew": "Add new place",
       "editTitle": "Edit Place",
       "createTitle": "New Place",
-      "name": "Name",
-      "slug": "Slug",
+      "name": "Place name",
+      "slug": "URL slug",
       "category": "Category",
       "address": "Address",
       "latitude": "Latitude",
@@ -143,7 +171,7 @@
       "actions": "Actions",
       "active": "Active",
       "inactive": "Inactive",
-      "pending": "Pending",
+      "pending": "Pending review",
       "approved": "Approved",
       "rejected": "Rejected",
       "confirmDelete": "Are you sure you want to delete this place?",

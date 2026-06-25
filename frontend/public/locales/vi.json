@@ -1,7 +1,8 @@
 {
   "common": {
-    "appName": "VK Food Explorer",
-    "appDescription": "Khám phá ẩm thực đường phố Vĩnh Khánh",
+    "appName": "Vĩnh Khánh Guide",
+    "appDescription": "Thuyết minh tự động khu phố ẩm thực Vĩnh Khánh",
+    "appTagline": "Khám phá ẩm thực đường phố qua giọng nói",
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
     "retry": "Thử lại",
@@ -27,10 +28,16 @@
     "map": "Bản đồ",
     "list": "Danh sách",
     "tours": "Tuyến tham quan",
-    "more": "Thêm"
+    "more": "Thêm",
+    "login": "Đăng nhập",
+    "adminDashboard": "Quản trị",
+    "ownerDashboard": "Kênh đối tác"
+  },
+  "header": {
+    "searchPlaceholder": "Tìm địa điểm ẩm thực..."
   },
   "search": {
-    "placeholder": "Tìm quán ăn...",
+    "placeholder": "Tìm quán ăn, địa điểm...",
     "filterAll": "Tất cả",
     "filterByCategory": "Lọc theo danh mục",
     "filterByPrice": "Lọc theo giá",
@@ -39,10 +46,10 @@
     "noResultsDesc": "Thử tìm kiếm với từ khóa khác"
   },
   "filter": {
-    "priceAll": "Tất cả",
-    "priceBudget": "Bình dân",
-    "priceMidrange": "Trung bình",
-    "priceUpscale": "Khá"
+    "priceAll": "Tất cả mức giá",
+    "priceBudget": "Bình dân ($)",
+    "priceMidrange": "Trung bình ($$)",
+    "priceUpscale": "Cao cấp ($$$)"
   },
   "poi": {
     "address": "Địa chỉ",
@@ -58,31 +65,44 @@
     "viewOnMap": "Xem trên bản đồ",
     "rating": "Đánh giá",
     "reviews": "đánh giá",
-    "reviewPlace": "Đánh giá quán này",
+    "noRating": "Mới",
+    "reviewPlace": "Đánh giá địa điểm này",
     "reviewDesc": "Chia sẻ trải nghiệm của bạn tại",
-    "yourName": "Tên của bạn",
-    "namePlaceholder": "Nhập tên của bạn",
+    "yourName": "Họ và tên",
+    "namePlaceholder": "Nhập họ và tên",
     "yourPhone": "Số điện thoại",
     "phonePlaceholder": "Nhập số điện thoại",
     "comment": "Nhận xét (Tùy chọn)",
     "commentPlaceholder": "Chia sẻ thêm về trải nghiệm của bạn...",
     "submitReview": "Gửi đánh giá",
-    "reviewSuccess": "Đánh giá của bạn đã được gửi thành công!",
-    "reviewError": "Có lỗi xảy ra khi gửi đánh giá.",
+    "reviewSuccess": "Cảm ơn! Đánh giá của bạn đã được ghi nhận.",
+    "reviewError": "Có lỗi xảy ra. Vui lòng thử lại.",
     "distance": "cách {{distance}}",
-    "closed": "Đã đóng",
-    "open": "Đang mở"
+    "closed": "Đã đóng cửa",
+    "open": "Đang mở cửa",
+    "addFavorite": "Lưu địa điểm",
+    "removeFavorite": "Bỏ lưu"
   },
   "audio": {
-    "title": "Thuyết minh",
+    "title": "Thuyết minh tự động",
     "play": "Phát",
     "pause": "Tạm dừng",
     "stop": "Dừng",
-    "loading": "Đang tải âm thanh...",
-    "unavailable": "Không có âm thanh",
-    "transcriptTitle": "Văn bản thuyết minh",
-    "showTranscript": "Xem",
-    "hideTranscript": "Ẩn"
+    "loading": "Đang tạo thuyết minh...",
+    "unavailable": "Chưa có thuyết minh",
+    "fetchFailed": "Không thể tải thuyết minh",
+    "playbackFailed": "Không thể phát âm thanh",
+    "loadError": "Lỗi tải file âm thanh",
+    "translateFailed": "Không thể dịch sang ngôn ngữ đã chọn",
+    "transcriptTitle": "Nội dung thuyết minh",
+    "showTranscript": "Xem văn bản",
+    "hideTranscript": "Ẩn",
+    "selectLanguage": "Ngôn ngữ:",
+    "seekLabel": "Tua âm thanh",
+    "volumeLabel": "Âm lượng",
+    "playing": "Đang phát",
+    "mute": "Tắt tiếng",
+    "unmute": "Bật tiếng"
   },
   "map": {
     "myLocation": "Vị trí của tôi",
@@ -92,10 +112,18 @@
     "clusterCount": "{{count}} địa điểm",
     "viewDetails": "Xem chi tiết"
   },
+  "tour": {
+    "title": "Tuyến tham quan",
+    "stops": "điểm dừng",
+    "distance": "km",
+    "duration": "phút",
+    "startTour": "Bắt đầu tham quan",
+    "noTours": "Chưa có tuyến tham quan"
+  },
   "admin": {
     "login": {
-      "title": "Đăng nhập quản trị",
-      "subtitle": "Đăng nhập để quản lý VK Food Explorer",
+      "title": "Đăng nhập hệ thống",
+      "subtitle": "Quản lý nội dung Vĩnh Khánh Guide",
       "username": "Tên đăng nhập",
       "password": "Mật khẩu",
       "submit": "Đăng nhập",
@@ -111,24 +139,24 @@
       "logout": "Đăng xuất"
     },
     "dashboard": {
-      "title": "Tổng quan",
+      "title": "Tổng quan hệ thống",
       "totalPlaces": "Tổng địa điểm",
-      "totalVisits": "Tổng lượt xem",
-      "totalAudioPlays": "Lượt nghe",
+      "totalVisits": "Lượt truy cập",
+      "totalAudioPlays": "Lượt nghe thuyết minh",
       "totalQrScans": "Lượt quét QR",
       "visitsOverTime": "Lượt truy cập theo thời gian",
       "popularPlaces": "Địa điểm phổ biến",
-      "languageBreakdown": "Phân bố ngôn ngữ",
+      "languageBreakdown": "Phân bố ngôn ngữ du khách",
       "visits": "lượt",
       "noData": "Chưa có dữ liệu"
     },
     "pois": {
-      "title": "Quản lý địa điểm",
+      "title": "Quản lý địa điểm ẩm thực",
       "addNew": "Thêm địa điểm mới",
-      "editTitle": "Sửa địa điểm",
+      "editTitle": "Chỉnh sửa địa điểm",
       "createTitle": "Tạo địa điểm mới",
-      "name": "Tên",
-      "slug": "Slug",
+      "name": "Tên địa điểm",
+      "slug": "Slug URL",
       "category": "Danh mục",
       "address": "Địa chỉ",
       "latitude": "Vĩ độ",
@@ -141,14 +169,14 @@
       "audioFile": "File âm thanh",
       "status": "Trạng thái",
       "actions": "Thao tác",
-      "active": "Hoạt động",
+      "active": "Đang hoạt động",
       "inactive": "Tạm ẩn",
       "pending": "Chờ duyệt",
       "approved": "Đã duyệt",
       "rejected": "Từ chối",
       "confirmDelete": "Bạn có chắc muốn xóa địa điểm này?",
-      "deleteSuccess": "Đã xóa địa điểm",
-      "saveSuccess": "Đã lưu địa điểm",
+      "deleteSuccess": "Đã xóa địa điểm thành công",
+      "saveSuccess": "Đã lưu địa điểm thành công",
       "uploadImage": "Tải ảnh lên",
       "uploadAudio": "Tải âm thanh lên",
       "pickLocation": "Nhấn vào bản đồ để chọn vị trí",
@@ -161,8 +189,8 @@
       "slug": "Slug",
       "icon": "URL biểu tượng",
       "color": "Màu sắc",
-      "sortOrder": "Thứ tự",
-      "active": "Hoạt động"
+      "sortOrder": "Thứ tự sắp xếp",
+      "active": "Đang hoạt động"
     }
   }
 }

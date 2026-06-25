@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import { createRoot, type Root } from 'react-dom/client';
-import { useMap } from '@/contexts/MapContext';
+import { Marker, Popup, useMap as useLeafletMap } from 'react-leaflet';
+import L from 'leaflet';
+import { renderToString } from 'react-dom/server';
 import type { POIListItem, POI } from '@/types/poi';
 import MarkerPopup from './MarkerPopup';
 
@@ -12,174 +12,85 @@ interface POIMarkerProps {
   onDetailClick: (poi: POIListItem | POI) => void;
 }
 
+const CATEGORY_EMOJI: Record<string, string> = {
+  ốc: '🐚', snail: '🐚',
+  lẩu: '🍲', hotpot: '🍲',
+  nướng: '🍢', bbq: '🍢', grill: '🍢',
+  'ăn vặt': '🍡', snack: '🍡',
+  'bánh mì': '🥖',
+  nước: '🥤', uống: '🥤', drink: '🥤', beer: '🥤',
+  cafe: '☕', coffee: '☕',
+};
+
+function getCategoryEmoji(category: string): string {
+  const cat = category.toLowerCase();
+  for (const [key, emoji] of Object.entries(CATEGORY_EMOJI)) {
+    if (cat.includes(key)) return emoji;
+  }
+  return '🍴';
+}
+
+// Tạo custom Leaflet DivIcon từ emoji
+function createCustomIcon(emoji: string, isSelected: boolean): L.DivIcon {
+  const size = isSelected ? 42 : 36;
+  const html = `
+    <div style="
+      width:${size}px; height:${size}px;
+      background:${isSelected ? 'oklch(0.65 0.24 30)' : 'white'};
+      border: 2.5px solid ${isSelected ? 'white' : 'oklch(0.65 0.24 30)'};
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.2s;
+      ${isSelected ? 'box-shadow: 0 0 0 6px rgba(237,100,30,0.18), 0 4px 12px rgba(0,0,0,0.25);' : ''}
+    ">
+      <span style="transform: rotate(45deg); font-size:${isSelected ? 18 : 15}px; line-height:1">${emoji}</span>
+    </div>
+  `;
+  return L.divIcon({
+    html,
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+    popupAnchor: [0, -size - 4],
+  });
+}
+
 export default function POIMarker({ poi, isSelected, onClick, onDetailClick }: POIMarkerProps) {
-  const { map } = useMap();
-  
-  // Keep refs for cleanup
-  const markerRef = useRef<mapboxgl.Marker | null>(null);
-  const markerRootRef = useRef<Root | null>(null);
-  const popupRootRef = useRef<Root | null>(null);
-  const popupRef = useRef<mapboxgl.Popup | null>(null);
+  const leafletMap = useLeafletMap();
+  const markerRef = useRef<L.Marker | null>(null);
+  const emoji = getCategoryEmoji(poi.category);
 
-  // Emojis mapping for categories
-  const getCategoryEmoji = (category: string) => {
-    const cat = category.toLowerCase();
-    if (cat.includes('ốc') || cat.includes('snail')) return '🐚';
-    if (cat.includes('lẩu') || cat.includes('hotpot')) return '🍲';
-    if (cat.includes('nướng') || cat.includes('bbq') || cat.includes('grill')) return '🍢';
-    if (cat.includes('ăn vặt') || cat.includes('snack')) return '🍡';
-    if (cat.includes('bánh mì')) return '🥖';
-    if (cat.includes('nước') || cat.includes('uống') || cat.includes('drink') || cat.includes('beer')) return '🥤';
-    return '🍴';
-  };
-
+  // Fly to và mở popup khi isSelected
   useEffect(() => {
-    if (!map) return;
-
-    // 1. Create custom HTML element for marker
-    const markerEl = document.createElement('div');
-    markerEl.className = 'custom-map-marker cursor-pointer relative flex items-center justify-center';
-    
-    // Create Root for rendering marker React content
-    const markerRoot = createRoot(markerEl);
-    markerRootRef.current = markerRoot;
-
-    // 2. Create popup element and content
-    const popupContentEl = document.createElement('div');
-    popupContentEl.className = 'w-full';
-    const popupRoot = createRoot(popupContentEl);
-    popupRootRef.current = popupRoot;
-    popupRoot.render(<MarkerPopup poi={poi} onDetailClick={onDetailClick} />);
-
-    const popup = new mapboxgl.Popup({
-      offset: 38,
-      closeButton: true,
-      closeOnClick: false, // Close when map clicked or other markers clicked
-      className: 'custom-mapbox-popup animate-scale-in',
-    }).setDOMContent(popupContentEl);
-    popupRef.current = popup;
-
-    // 3. Create Mapbox Marker
-    const marker = new mapboxgl.Marker({
-      element: markerEl,
-      anchor: 'bottom',
-    })
-      .setLngLat([poi.longitude, poi.latitude])
-      .setPopup(popup)
-      .addTo(map);
-    
-    markerRef.current = marker;
-
-    // Listen to click on marker element
-    markerEl.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (onClick) onClick();
-    });
-
-    // Handle popup close event (deselection triggers)
-    popup.on('close', () => {
-      // Mapbox automatically triggers this when closed
-    });
-
-    // Cleanup
-    return () => {
-      const pRoot = popupRootRef.current;
-      const mRoot = markerRootRef.current;
-      const m = markerRef.current;
-      const p = popupRef.current;
-
-      popupRootRef.current = null;
-      markerRootRef.current = null;
-      markerRef.current = null;
-      popupRef.current = null;
-
-      // Defer unmounting to avoid warning: "Attempted to synchronously unmount a root while React was already rendering"
-      setTimeout(() => {
-        if (pRoot) pRoot.unmount();
-        if (mRoot) mRoot.unmount();
-      }, 0);
-
-      if (m) {
-        m.remove();
-      }
-      if (p) {
-        p.remove();
-      }
-    };
-  }, [map, poi.id]); // Re-create only on map or id change
-
-  // Sync isSelected state & render marker icon
-  useEffect(() => {
-    if (!markerRootRef.current || !markerRef.current) return;
-
-    // Render the React content inside Mapbox marker element
-    markerRootRef.current.render(
-      <div className="relative flex items-center justify-center">
-        {/* Pulse Ring if Selected */}
-        {isSelected && (
-          <div className="absolute w-12 h-12 rounded-full bg-primary/20 border border-primary/40 animate-pulse-ring" />
-        )}
-        
-        {/* Main Marker pin shape */}
-        <div
-          className={`
-            relative w-9 h-9 rounded-full flex items-center justify-center shadow-lg border-2
-            transition-all duration-300 ease-[var(--ease-out-quart)]
-            ${
-              isSelected
-                ? 'bg-primary border-white scale-115 text-white z-30'
-                : 'bg-card border-primary text-text-primary hover:scale-105 z-10'
-            }
-          `}
-        >
-          {/* Emojis based on category */}
-          <span className="text-lg" role="img" aria-label={poi.category}>
-            {getCategoryEmoji(poi.category)}
-          </span>
-
-          {/* Little triangle pin tail */}
-          <div
-            className={`
-              absolute bottom-[-6px] left-[50%] translate-x-[-50%] w-0 h-0
-              border-l-[6px] border-l-transparent
-              border-r-[6px] border-r-transparent
-              transition-colors duration-300
-              ${isSelected ? 'border-t-[6px] border-t-primary' : 'border-t-[6px] border-t-card'}
-            `}
-          />
-        </div>
-      </div>
-    );
-
-    // Sync Mapbox Popup display
-    const popup = popupRef.current;
-    if (popup && map) {
-      if (isSelected) {
-        // Center camera slightly above POI to make space for the popup
-        map.easeTo({
-          center: [poi.longitude, poi.latitude + 0.0006],
-          zoom: Math.max(map.getZoom(), 16),
-          duration: 400,
-        });
-        
-        if (!popup.isOpen()) {
-          // Open popup programmatically
-          markerRef.current.togglePopup();
-        }
-      } else {
-        if (popup.isOpen()) {
-          popup.remove();
-        }
-      }
+    if (!markerRef.current) return;
+    if (isSelected) {
+      leafletMap.flyTo([poi.latitude, poi.longitude], Math.max(leafletMap.getZoom(), 17), { animate: true, duration: 0.8 });
+      markerRef.current.openPopup();
+    } else {
+      markerRef.current.closePopup();
     }
-  }, [isSelected, map, poi.longitude, poi.latitude, poi.category]);
+  }, [isSelected, poi.latitude, poi.longitude, leafletMap]);
 
-  // Sync dynamic content in popup when POI properties change
-  useEffect(() => {
-    if (popupRootRef.current) {
-      popupRootRef.current.render(<MarkerPopup poi={poi} onDetailClick={onDetailClick} />);
-    }
-  }, [poi, onDetailClick]);
-
-  return null; // Rendered via Mapbox DOM, doesn't draw anything directly in React DOM tree
+  return (
+    <Marker
+      position={[poi.latitude, poi.longitude]}
+      icon={createCustomIcon(emoji, isSelected)}
+      ref={markerRef}
+      eventHandlers={{
+        click: () => onClick?.(),
+      }}
+      zIndexOffset={isSelected ? 1000 : 0}
+    >
+      <Popup
+        closeButton={true}
+        minWidth={240}
+        maxWidth={280}
+        className="leaflet-poi-popup"
+      >
+        <MarkerPopup poi={poi} onDetailClick={onDetailClick} />
+      </Popup>
+    </Marker>
+  );
 }

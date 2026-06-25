@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, useState, type ReactNode, type MutableRefObject } from 'react';
-import type { Map } from 'mapbox-gl';
+import type { Map } from 'leaflet';
 
 interface MapContextValue {
   map: Map | null;
@@ -18,7 +18,6 @@ export function MapProvider({ children }: { children: ReactNode }) {
     setMapState(newMap);
   };
 
-
   return (
     <MapContext.Provider value={{ map, mapRef, setMap }}>
       {children}
@@ -28,8 +27,6 @@ export function MapProvider({ children }: { children: ReactNode }) {
 
 export function useMap(): MapContextValue {
   const context = useContext(MapContext);
-  if (!context) {
-    throw new Error('useMap must be used within a MapProvider');
-  }
+  if (!context) throw new Error('useMap must be used within a MapProvider');
   return context;
 }

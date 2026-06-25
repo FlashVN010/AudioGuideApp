@@ -1,11 +1,11 @@
 {
-  "name": "VinhKhanh Food Explorer",
-  "short_name": "VK Food",
-  "description": "Discover the best street food in Vinh Khanh - Interactive food map for tourists",
+  "name": "Vĩnh Khánh Guide",
+  "short_name": "VK Guide",
+  "description": "Hệ thống thuyết minh tự động khu phố ẩm thực Vĩnh Khánh — Quận 4, TP.HCM",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F7F5F0",
-  "theme_color": "#E8523A",
+  "background_color": "#ffffff",
+  "theme_color": "#18181b",
   "orientation": "any",
   "icons": [
     {
@@ -22,6 +22,6 @@
     }
   ],
   "categories": ["food", "travel", "lifestyle"],
-  "lang": "en",
+  "lang": "vi",
   "dir": "ltr"
 }
