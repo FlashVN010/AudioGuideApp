@@ -1,81 +1,55 @@
 import { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import { createRoot, type Root } from 'react-dom/client';
-import { useMap } from '@/contexts/MapContext';
+import { useMap as useLeafletMap } from 'react-leaflet';
+import L from 'leaflet';
 import { useGeolocation } from '@/hooks/useGeolocation';
 
 export default function UserLocation() {
-  const { map } = useMap();
   const { position } = useGeolocation();
-  
-  const markerRef = useRef<mapboxgl.Marker | null>(null);
-  const rootRef = useRef<Root | null>(null);
+  const leafletMap = useLeafletMap();
+  const markerRef = useRef<L.Marker | null>(null);
+  const circleRef = useRef<L.Circle | null>(null);
 
   useEffect(() => {
-    if (!map || !position) {
-      // Clean up marker if position is lost or map is not ready
-      if (markerRef.current) {
-        markerRef.current.remove();
-        markerRef.current = null;
-      }
-      if (rootRef.current) {
-        const root = rootRef.current;
-        rootRef.current = null;
-        setTimeout(() => root.unmount(), 0);
-      }
+    if (!leafletMap) return;
+
+    if (!position) {
+      markerRef.current?.remove(); markerRef.current = null;
+      circleRef.current?.remove(); circleRef.current = null;
       return;
     }
 
-    const { longitude, latitude } = position;
+    const { latitude, longitude, accuracy } = position;
+    const latlng: L.LatLngExpression = [latitude, longitude];
 
-    // Create marker if it doesn't exist
-    if (!markerRef.current) {
-      const el = document.createElement('div');
-      el.className = 'user-location-marker relative flex items-center justify-center pointer-events-none';
-      
-      const root = createRoot(el);
-      rootRef.current = root;
-      
-      // Render pulsing blue dot
-      root.render(
-        <div className="relative flex items-center justify-center w-6 h-6">
-          {/* Blue pulsing halo */}
-          <div className="absolute w-5 h-5 rounded-full bg-accent/35 animate-ping" />
-          <div className="absolute w-5 h-5 rounded-full bg-accent/20 border border-accent/40 animate-pulse-ring" />
-          
-          {/* solid center core */}
-          <div className="relative w-3.5 h-3.5 bg-accent border-2 border-white rounded-full shadow-[0_0_6px_rgba(var(--color-accent),0.5)]" />
+    // Pulsing blue dot icon
+    const userIcon = L.divIcon({
+      html: `
+        <div style="position:relative; width:20px; height:20px; display:flex; align-items:center; justify-content:center;">
+          <div style="position:absolute; width:20px; height:20px; border-radius:50%; background:rgba(59,130,246,0.2); animation:ping 1.5s ease-in-out infinite;"></div>
+          <div style="width:12px; height:12px; border-radius:50%; background:#3b82f6; border:2.5px solid white; box-shadow:0 0 8px rgba(59,130,246,0.6); flex-shrink:0;"></div>
         </div>
-      );
+        <style>@keyframes ping{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.8);opacity:0.3}}</style>
+      `,
+      className: '',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    });
 
-      const marker = new mapboxgl.Marker({
-        element: el,
-        anchor: 'center',
-      })
-        .setLngLat([longitude, latitude])
-        .addTo(map);
-
-      markerRef.current = marker;
+    if (!markerRef.current) {
+      markerRef.current = L.marker(latlng, { icon: userIcon, zIndexOffset: 2000, interactive: false }).addTo(leafletMap);
+      if (accuracy && accuracy < 500) {
+        circleRef.current = L.circle(latlng, { radius: accuracy, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1 }).addTo(leafletMap);
+      }
     } else {
-      // Smoothly update location of existing marker
-      markerRef.current.setLngLat([longitude, latitude]);
+      markerRef.current.setLatLng(latlng);
+      circleRef.current?.setLatLng(latlng);
     }
-  }, [map, position]);
 
-  // Clean up on unmount
-  useEffect(() => {
     return () => {
-      if (rootRef.current) {
-        const root = rootRef.current;
-        rootRef.current = null;
-        setTimeout(() => root.unmount(), 0);
-      }
-      if (markerRef.current) {
-        markerRef.current.remove();
-        markerRef.current = null;
-      }
+      markerRef.current?.remove(); markerRef.current = null;
+      circleRef.current?.remove(); circleRef.current = null;
     };
-  }, []);
+  }, [position, leafletMap]);
 
   return null;
 }

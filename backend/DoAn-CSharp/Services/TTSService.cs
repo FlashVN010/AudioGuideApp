@@ -45,8 +45,8 @@ namespace src.Services
 
             var processInfo = new ProcessStartInfo
             {
-                FileName = "edge-tts",
-                Arguments = $"--voice {voice} --file \"{tempTextFile}\" --write-media \"{filePath}\"",
+                FileName = "python",
+Arguments = $"-m edge_tts --voice {voice} --file \"{tempTextFile}\" --write-media \"{filePath}\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
