@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Models.Entities;
+using src.Models.Entities;
 
-namespace DoAn_CSharp.Data
+namespace src.Data
 {
     public static class SeedData
     {
@@ -38,7 +38,7 @@ namespace DoAn_CSharp.Data
                     var physicalPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", audio.FilePath.TrimStart('/'));
                     if (System.IO.File.Exists(physicalPath))
                     {
-                        int duration = DoAn_CSharp.Services.TTSService.GetMp3Duration(physicalPath);
+                        int duration = src.Services.TTSService.GetMp3Duration(physicalPath);
                         if (duration > 0)
                         {
                             audio.DurationSeconds = duration;

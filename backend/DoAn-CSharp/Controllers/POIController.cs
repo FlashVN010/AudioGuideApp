@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using DoAn_CSharp.Services;
-using DoAn_CSharp.Models.DTOs;
+using src.Services;
+using src.Models.DTOs;
 
-using DoAn_CSharp.Data;
+using src.Data;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/pois")]
@@ -148,7 +148,7 @@ namespace DoAn_CSharp.Controllers
 
             if (poi.OwnerId.HasValue)
             {
-                _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+                _context.Notifications.Add(new src.Models.Entities.Notification
                 {
                     OwnerId = poi.OwnerId.Value,
                     Message = $"Địa điểm '{poi.Name}' của bạn đã bị xóa bởi Admin.",

@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Services;
+using src.Data;
+using src.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
-namespace DoAn_CSharp.Extensions
+namespace src.Extensions
 {
     public static class ServiceExtensions
     {
@@ -38,7 +38,6 @@ namespace DoAn_CSharp.Extensions
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IAnalyticsService, AnalyticsService>();
             services.AddScoped<ITourService, TourService>();
-            services.AddScoped<IQuizService, QuizService>();
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<ITTSService, TTSService>();
 

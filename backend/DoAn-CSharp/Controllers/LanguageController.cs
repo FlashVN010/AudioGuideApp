@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Data;
+using src.Data;
 using System.Threading.Tasks;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/admin/languages")]

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Models.Entities;
+using src.Models.Entities;
 
-namespace DoAn_CSharp.Data
+namespace src.Data
 {
     public class AppDbContext : DbContext
     {
@@ -20,8 +20,7 @@ namespace DoAn_CSharp.Data
         public DbSet<QRCode> QRCodes { get; set; }
         public DbSet<VisitLog> VisitLogs { get; set; }
         public DbSet<AdminUser> AdminUsers { get; set; }
-        public DbSet<QuizQuestion> QuizQuestions { get; set; }
-        public DbSet<QuizQuestionTranslation> QuizQuestionTranslations { get; set; }
+
         public DbSet<Review> Reviews { get; set; }
 
         // New
@@ -167,18 +166,6 @@ namespace DoAn_CSharp.Data
                 .WithMany()
                 .HasForeignKey(ts => ts.POIId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // ── QuizQuestion ──────────────────────────────────────────────
-            modelBuilder.Entity<QuizQuestion>()
-                .HasOne(q => q.POI)
-                .WithMany()
-                .HasForeignKey(q => q.POIId)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<QuizQuestionTranslation>()
-                .HasOne(t => t.QuizQuestion)
-                .WithMany(q => q.Translations)
-                .HasForeignKey(t => t.QuizQuestionId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             // ── Review ────────────────────────────────────────────────────
             modelBuilder.Entity<Review>()

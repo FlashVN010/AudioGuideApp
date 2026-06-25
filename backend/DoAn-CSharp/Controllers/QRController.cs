@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DoAn_CSharp.Services;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Data;
+using src.Services;
+using src.Models.DTOs;
+using src.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/qr")]

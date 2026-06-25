@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace DoAn_CSharp.Middleware
+namespace src.Middleware
 {
     public class ExceptionMiddleware
     {

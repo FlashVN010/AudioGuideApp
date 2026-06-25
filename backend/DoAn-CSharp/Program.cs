@@ -1,5 +1,5 @@
-using DoAn_CSharp.Extensions;
-using DoAn_CSharp.Middleware;
+using src.Extensions;
+using src.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,7 +87,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        await DoAn_CSharp.Data.SeedData.InitializeAsync(services);
+        await src.Data.SeedData.InitializeAsync(services);
     }
     catch (Exception ex)
     {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.Entities;
-using DoAn_CSharp.Models.DTOs;
+using src.Data;
+using src.Models.Entities;
+using src.Models.DTOs;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public class TourService : ITourService
     {

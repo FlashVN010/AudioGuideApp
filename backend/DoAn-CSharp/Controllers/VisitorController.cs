@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.Entities;
+using src.Data;
+using src.Models.Entities;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/visitor")]

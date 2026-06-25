@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DoAn_CSharp.Migrations
+namespace src.Migrations
 {
     /// <inheritdoc />
     public partial class AddRatingToPOI : Migration

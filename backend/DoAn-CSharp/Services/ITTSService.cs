@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public interface ITTSService
     {

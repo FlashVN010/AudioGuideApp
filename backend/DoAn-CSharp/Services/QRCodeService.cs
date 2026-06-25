@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Models.Entities;
+using src.Data;
+using src.Models.DTOs;
+using src.Models.Entities;
 using QRCoder;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public class QRCodeService : IQRCodeService
     {

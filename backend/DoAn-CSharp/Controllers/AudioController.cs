@@ -2,11 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Services;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.Entities;
+using src.Services;
+using src.Data;
+using src.Models.Entities;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

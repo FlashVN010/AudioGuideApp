@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Linq;
-using DoAn_CSharp.Data;
+using src.Data;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/notifications")]

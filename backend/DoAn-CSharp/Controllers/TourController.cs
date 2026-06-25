@@ -1,21 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using DoAn_CSharp.Services;
+using src.Services;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Models.DTOs;
+using src.Models.DTOs;
 using System;
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/tours")]
     public class TourController : ControllerBase
     {
         private readonly ITourService _tourService;
-        private readonly DoAn_CSharp.Data.AppDbContext _context;
+        private readonly src.Data.AppDbContext _context;
 
-        public TourController(ITourService tourService, DoAn_CSharp.Data.AppDbContext context)
+        public TourController(ITourService tourService, src.Data.AppDbContext context)
         {
             _tourService = tourService;
             _context = context;
@@ -78,7 +78,7 @@ namespace DoAn_CSharp.Controllers
             var tour = await _context.Tours.FindAsync(id);
             if (tour == null) return NotFound("Tour not found");
 
-            var stop = new DoAn_CSharp.Models.Entities.TourStop
+            var stop = new src.Models.Entities.TourStop
             {
                 TourId = id,
                 POIId = dto.POIId,
@@ -116,7 +116,7 @@ namespace DoAn_CSharp.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPut("~/api/admin/tours/{id:int}/stops/reorder")]
-        public async Task<IActionResult> ReorderTourStops(int id, [FromBody] List<DoAn_CSharp.Models.DTOs.TourStopCreateDto> orders)
+        public async Task<IActionResult> ReorderTourStops(int id, [FromBody] List<src.Models.DTOs.TourStopCreateDto> orders)
         {
             var tour = await _context.Tours.Include(t => t.Stops).FirstOrDefaultAsync(t => t.Id == id);
             if (tour == null) return NotFound("Tour not found");

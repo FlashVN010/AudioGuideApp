@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DoAn_CSharp.Models.Entities
+namespace src.Models.Entities
 {
     public class Tour
     {

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Services;
+using src.Models.DTOs;
+using src.Services;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

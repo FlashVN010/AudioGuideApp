@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Services;
+using src.Models.DTOs;
+using src.Services;
 
-using DoAn_CSharp.Data;
+using src.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/owner")]
@@ -53,7 +53,7 @@ namespace DoAn_CSharp.Controllers
             var result = await _poiService.CreateAsync(dto, ownerId);
 
             // Send Admin notification
-            _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+            _context.Notifications.Add(new src.Models.Entities.Notification
             {
                 OwnerId = null,
                 Message = $"Có yêu cầu đăng ký địa điểm mới '{result.Name}' đang chờ duyệt.",
@@ -97,7 +97,7 @@ namespace DoAn_CSharp.Controllers
             var result = await _poiService.UpdateAsync(id, dto);
 
             // Send Admin notification
-            _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+            _context.Notifications.Add(new src.Models.Entities.Notification
             {
                 OwnerId = null,
                 Message = $"Địa điểm '{poi.Name}' đã được cập nhật bởi chủ quán và đang chờ duyệt lại.",
@@ -126,7 +126,7 @@ namespace DoAn_CSharp.Controllers
                 return NotFound(new { error = "NotFound", message = "POI was not found or already deleted." });
 
             // Send Admin notification
-            _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+            _context.Notifications.Add(new src.Models.Entities.Notification
             {
                 OwnerId = null,
                 Message = $"Địa điểm '{poi.Name}' đã bị chủ quán xóa.",
@@ -263,7 +263,7 @@ namespace DoAn_CSharp.Controllers
 
             foreach(var url in imageUrls)
             {
-                _context.POIImages.Add(new DoAn_CSharp.Models.Entities.POIImage { POIId = id, ImageUrl = url });
+                _context.POIImages.Add(new src.Models.Entities.POIImage { POIId = id, ImageUrl = url });
             }
             await _context.SaveChangesAsync();
             return Ok(new { message = "Images added successfully" });

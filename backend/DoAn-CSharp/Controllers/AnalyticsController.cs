@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using DoAn_CSharp.Services;
-using DoAn_CSharp.Models.DTOs;
+using src.Services;
+using src.Models.DTOs;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/analytics")]

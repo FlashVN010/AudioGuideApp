@@ -1,4 +1,4 @@
-namespace DoAn_CSharp.Models;
+namespace src.Models;
 
 public class ErrorViewModel
 {

@@ -1,0 +1,3 @@
+# 2. Restore và Build
+dotnet restore
+dotnet build

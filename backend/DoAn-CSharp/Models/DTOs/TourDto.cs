@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DoAn_CSharp.Models.DTOs
+namespace src.Models.DTOs
 {
     public class TourDto
     {

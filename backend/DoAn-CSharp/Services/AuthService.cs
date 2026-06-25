@@ -4,11 +4,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Models.Entities;
+using src.Data;
+using src.Models.DTOs;
+using src.Models.Entities;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public class AuthService : IAuthService
     {

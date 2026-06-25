@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Models.Entities;
+using src.Data;
+using src.Models.DTOs;
+using src.Models.Entities;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public class TranslationService : ITranslationService
     {

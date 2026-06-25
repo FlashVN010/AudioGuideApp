@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DoAn_CSharp.Data;
-using DoAn_CSharp.Models.DTOs;
-using DoAn_CSharp.Models.Entities;
-using DoAn_CSharp.Services;
+using src.Data;
+using src.Models.DTOs;
+using src.Models.Entities;
+using src.Services;
 
-namespace DoAn_CSharp.Controllers
+namespace src.Controllers
 {
     [ApiController]
     [Route("api/admin")]
@@ -147,7 +147,7 @@ namespace DoAn_CSharp.Controllers
             if (poi.OwnerId.HasValue)
             {
                 string statusText = dto.Status == "approved" ? "được duyệt" : (dto.Status == "rejected" ? "bị từ chối" : "đưa về trạng thái chờ duyệt");
-                _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+                _context.Notifications.Add(new src.Models.Entities.Notification
                 {
                     OwnerId = poi.OwnerId.Value,
                     Message = $"Địa điểm '{poi.Name}' của bạn đã {statusText} bởi Admin.",
@@ -159,84 +159,6 @@ namespace DoAn_CSharp.Controllers
             }
 
             return Ok(new { message = $"POI status updated to {dto.Status}." });
-        }
-
-        // ── Quiz Management ─────────────────────────────────────────────
-
-        [HttpPost("quiz")]
-        public async Task<IActionResult> CreateQuiz([FromBody] QuizAdminDto dto)
-        {
-            var quiz = new DoAn_CSharp.Models.Entities.QuizQuestion
-            {
-                POIId = dto.POIId,
-                QuestionText = dto.QuestionText,
-                AnswerA = dto.AnswerA,
-                AnswerB = dto.AnswerB,
-                AnswerC = dto.AnswerC,
-                AnswerD = dto.AnswerD,
-                CorrectOption = dto.CorrectOption,
-                ExplanationText = dto.ExplanationText
-            };
-            _context.QuizQuestions.Add(quiz);
-            await _context.SaveChangesAsync();
-            return Ok(quiz);
-        }
-
-        [HttpPut("quiz/{id:int}")]
-        public async Task<IActionResult> UpdateQuiz(int id, [FromBody] QuizAdminDto dto)
-        {
-            var quiz = await _context.QuizQuestions.FindAsync(id);
-            if (quiz == null) return NotFound("Quiz not found.");
-
-            quiz.QuestionText = dto.QuestionText;
-            quiz.AnswerA = dto.AnswerA;
-            quiz.AnswerB = dto.AnswerB;
-            quiz.AnswerC = dto.AnswerC;
-            quiz.AnswerD = dto.AnswerD;
-            quiz.CorrectOption = dto.CorrectOption;
-            quiz.ExplanationText = dto.ExplanationText;
-
-            await _context.SaveChangesAsync();
-            return Ok(quiz);
-        }
-
-        [HttpGet("quiz")]
-        public async Task<IActionResult> GetQuizQuestions([FromQuery] int? poiId = null)
-        {
-            var query = _context.QuizQuestions.AsQueryable();
-            if (poiId.HasValue)
-            {
-                query = query.Where(q => q.POIId == poiId.Value);
-            }
-
-            var quizList = await query
-                .Select(q => new
-                {
-                    q.Id,
-                    q.POIId,
-                    POIName = _context.POIs.Where(p => p.Id == q.POIId).Select(p => p.Name).FirstOrDefault(),
-                    q.QuestionText,
-                    q.AnswerA,
-                    q.AnswerB,
-                    q.AnswerC,
-                    q.AnswerD,
-                    q.CorrectOption,
-                    q.ExplanationText
-                })
-                .ToListAsync();
-
-            return Ok(quizList);
-        }
-
-        [HttpDelete("quiz/{id:int}")]
-        public async Task<IActionResult> DeleteQuiz(int id)
-        {
-            var quiz = await _context.QuizQuestions.FindAsync(id);
-            if (quiz == null) return NotFound("Quiz not found.");
-
-            _context.QuizQuestions.Remove(quiz);
-            await _context.SaveChangesAsync();
-            return NoContent();
         }
 
         // ── Category Management ─────────────────────────────────────────
@@ -714,7 +636,7 @@ namespace DoAn_CSharp.Controllers
             // Notify new owner if assigned
             if (dto.OwnerId.HasValue)
             {
-                _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+                _context.Notifications.Add(new src.Models.Entities.Notification
                 {
                     OwnerId = dto.OwnerId.Value,
                     Message = $"Bạn đã được gán quyền sở hữu địa điểm '{poi.Name}' bởi Admin.",
@@ -739,7 +661,7 @@ namespace DoAn_CSharp.Controllers
 
             if (poi.OwnerId.HasValue)
             {
-                _context.Notifications.Add(new DoAn_CSharp.Models.Entities.Notification
+                _context.Notifications.Add(new src.Models.Entities.Notification
                 {
                     OwnerId = poi.OwnerId.Value,
                     Message = $"Địa điểm '{poi.Name}' của bạn đã được khôi phục bởi Admin.",
@@ -859,18 +781,6 @@ namespace DoAn_CSharp.Controllers
     public class UpdateStatusDto
     {
         public string Status { get; set; } = string.Empty; // approved, rejected, pending
-    }
-
-    public class QuizAdminDto
-    {
-        public int POIId { get; set; }
-        public string QuestionText { get; set; } = string.Empty;
-        public string AnswerA { get; set; } = string.Empty;
-        public string AnswerB { get; set; } = string.Empty;
-        public string AnswerC { get; set; } = string.Empty;
-        public string AnswerD { get; set; } = string.Empty;
-        public char CorrectOption { get; set; }
-        public string ExplanationText { get; set; } = string.Empty;
     }
 
     public class ResetPasswordAdminDto

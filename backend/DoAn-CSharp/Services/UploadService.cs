@@ -1,6 +1,6 @@
-using DoAn_CSharp.Models.DTOs;
+using src.Models.DTOs;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public class UploadService : IUploadService
     {

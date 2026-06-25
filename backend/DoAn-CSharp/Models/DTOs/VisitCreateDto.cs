@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DoAn_CSharp.Models.DTOs
+namespace src.Models.DTOs
 {
     public class VisitCreateDto
     {

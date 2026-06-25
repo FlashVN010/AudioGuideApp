@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace DoAn_CSharp.Services
+namespace src.Services
 {
     public class TTSService : ITTSService
     {

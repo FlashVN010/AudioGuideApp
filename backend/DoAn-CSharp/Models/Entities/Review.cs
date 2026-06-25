@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DoAn_CSharp.Models.Entities
+namespace src.Models.Entities
 {
     public class Review
     {

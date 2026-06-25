@@ -1,10 +1,10 @@
 using FluentValidation;
-using DoAn_CSharp.Models.DTOs;
+using src.Models.DTOs;
 using System.Collections.Generic;
-using DoAn_CSharp.Data;
+using src.Data;
 using System.Linq;
 
-namespace DoAn_CSharp.Validators
+namespace src.Validators
 {
     public class POIUpdateValidator : AbstractValidator<POIUpdateDto>
     {

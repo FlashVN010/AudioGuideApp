@@ -1,11 +1,18 @@
 using System;
 
-namespace DoAn_CSharp.Models.Entities
+namespace src.Models.Entities
 {
     public enum TranslationType : byte
     {
         POI = 1,
         MenuItem = 2,
+
+        /// <summary>
+        /// Deprecated: tính năng Quiz đã bị loại bỏ (xem migration
+        /// RemoveQuizFeature). Giữ lại giá trị số 3 để không làm lệch
+        /// các giá trị enum phía sau đối với dữ liệu AudioFile cũ đã
+        /// lưu trong database trước khi Quiz bị xóa.
+        /// </summary>
         QuizQuestion = 3,
         Tour = 4,
         Category = 5,
