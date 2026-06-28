@@ -46,7 +46,16 @@ namespace src.Services
             // Append a short random string or timestamp to ensure uniqueness
             string uniqueSuffix = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
             string code = $"VKE-POI-{poiId:D3}-{uniqueSuffix}";
+
+            // Lưu ý: QRImageUrl phải là URL TUYỆT ĐỐI trỏ tới chính BACKEND
+            // (nơi file ảnh .png thực sự được lưu ở wwwroot/qrcodes), KHÔNG
+            // phải BaseUrl của frontend. Dùng relative path ("/qrcodes/...")
+            // chỉ "vô tình" hoạt động trong `npm run dev` nhờ Vite proxy;
+            // khi build production và deploy domain thật, không còn proxy
+            // đó nữa nên ảnh sẽ vỡ (404) nếu vẫn dùng relative path.
+            string apiBaseUrl = (_config.GetValue<string>("App:ApiBaseUrl") ?? "http://localhost:5011").TrimEnd('/');
             string relativePath = $"/qrcodes/{code}.png";
+            string absoluteImageUrl = $"{apiBaseUrl}{relativePath}";
 
             // Deactivate previous active QR codes for this POI
             var activeQrs = await _context.QRCodes
@@ -82,7 +91,7 @@ namespace src.Services
             {
                 POIId = poiId,
                 Code = code,
-                QRImageUrl = relativePath,
+                QRImageUrl = absoluteImageUrl,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             };

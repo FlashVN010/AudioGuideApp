@@ -9,7 +9,6 @@ import {
   QrCode,
   Volume2,
   Globe,
-  FileSpreadsheet,
   LogOut,
   Menu,
   X,
@@ -120,14 +119,13 @@ export default function AdminLayout() {
     { label: t('admin.nav.dashboard', 'Dashboard'), to: '/admin/dashboard', icon: LayoutDashboard },
     { label: t('admin.nav.owners', 'Owners'), to: '/admin/owners', icon: Users },
     { label: t('admin.nav.pois', 'POIs'), to: '/admin/pois', icon: MapPin },
-    { label: t('admin.nav.poisPending', 'POI Approvals'), to: '/admin/pois/pending', icon: ClipboardCheck },
+    //{ label: t('admin.nav.poisPending', 'POI Approvals'), to: '/admin/pois/pending', icon: ClipboardCheck },
     { label: t('admin.nav.category', 'Category'), to: '/admin/categories', icon: FolderTree },
     { label: t('admin.nav.tours', 'Tours'), to: '/admin/tours', icon: Compass },
     { label: t('admin.nav.qrCode', 'QR Code'), to: '/admin/qr', icon: QrCode },
     { label: t('admin.nav.audios', 'Audios'), to: '/admin/audios', icon: Volume2 },
     { label: t('admin.nav.language', 'Language'), to: '/admin/languages', icon: Globe },
-    { label: t('admin.nav.auditLog', 'AuditLog'), to: '/admin/audit-logs', icon: FileSpreadsheet },
-    { label: t('admin.nav.tripLogs', 'Nhật ký chuyến đi'), to: '/admin/trip-logs', icon: History },
+    { label: t('admin.nav.tripLogs', 'History'), to: '/admin/trip-logs', icon: History },
   ];
 
   return (
@@ -140,7 +138,7 @@ export default function AdminLayout() {
             VK
           </div>
           <span className="font-display font-extrabold text-base tracking-tight text-text-primary">
-            VK <span className="font-medium text-text-secondary">Admin Shell</span>
+            VK <span className="font-medium text-text-secondary">Admin Dashboard</span>
           </span>
         </div>
 
@@ -247,7 +245,7 @@ export default function AdminLayout() {
                 className="flex items-center gap-3 w-full px-4 py-2.5 rounded-[var(--radius-md)] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-alt transition-colors outline-none"
               >
                 <Home size={18} />
-                <span>Quay lại trang chủ</span>
+                <span>Quay lại</span>
               </NavLink>
               <button
                 onClick={logout}
