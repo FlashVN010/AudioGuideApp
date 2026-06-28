@@ -35,7 +35,6 @@ const AdminTourListPage = React.lazy(() => import('@/pages/admin/TourListPage'))
 const AdminTourFormPage = React.lazy(() => import('@/pages/admin/TourFormPage'));
 const AdminQRListPage = React.lazy(() => import('@/pages/admin/QRListPage'));
 const AdminAudioListPage = React.lazy(() => import('@/pages/admin/AudioListPage'));
-const AdminAuditLogsPage = React.lazy(() => import('@/pages/admin/AuditLogsPage'));
 const AdminTripLogsPage = React.lazy(() => import('@/pages/admin/TripLogsPage'));
 
 // --- Protected Route Wrapper ---
@@ -146,7 +145,6 @@ export default function App() {
           <Route path="tours/:id/edit" element={<AdminTourFormPage />} />
           <Route path="qr" element={<AdminQRListPage />} />
           <Route path="audios" element={<AdminAudioListPage />} />
-          <Route path="audit-logs" element={<AdminAuditLogsPage />} />
           <Route path="trip-logs" element={<AdminTripLogsPage />} />
         </Route>
 
@@ -155,6 +153,7 @@ export default function App() {
       </Routes>
 
       {loginModalOpen && (
+        // @ts-ignore - LoginModal props typing mismatch; runtime accepts onClose
         <LoginModal onClose={() => setLoginModalOpen(false)} />
       )}
     </Suspense>

@@ -40,15 +40,26 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configure CORS
+// Lưu ý: danh sách origin được lấy từ appsettings (App:BaseUrl, App:ApiBaseUrl)
+// cộng với các origin dev cố định, để khi deploy domain thật chỉ cần điền
+// đúng vào appsettings.Production.json mà không phải sửa code này.
+var configuredFrontendUrl = builder.Configuration.GetValue<string>("App:BaseUrl");
+var allowedOrigins = new List<string>
+{
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://localhost:5173",
+};
+if (!string.IsNullOrWhiteSpace(configuredFrontendUrl))
+{
+    allowedOrigins.Add(configuredFrontendUrl.TrimEnd('/'));
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "http://localhost:3000",
-                "https://localhost:5173",
-                "http://192.168.28.244:5173")
+        policy.WithOrigins(allowedOrigins.Distinct().ToArray())
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
