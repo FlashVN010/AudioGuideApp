@@ -35,13 +35,15 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-sm border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 w-full overflow-hidden border-b border-border/70 bg-surface/85 backdrop-blur-xl shadow-sm">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <div className="absolute -top-20 left-1/4 h-40 w-40 rounded-full bg-primary/8 blur-3xl pointer-events-none" />
+      <div className="absolute -top-16 right-0 h-36 w-36 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
 
         {/* Wordmark */}
-        <Link to="/" className="flex items-center gap-2.5 group shrink-0 select-none">
-          {/* Minimal square mark */}
-          <div className="w-7 h-7 rounded-[var(--radius-sm)] bg-primary flex items-center justify-center shrink-0">
+        <Link to="/" className="flex items-center gap-3 group shrink-0 select-none">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary via-primary to-teal-600 flex items-center justify-center shrink-0 shadow-md shadow-primary/10 ring-1 ring-border/40">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="5" height="5" rx="1" fill="white"/>
               <rect x="8" y="1" width="5" height="5" rx="1" fill="white" opacity="0.6"/>
@@ -49,14 +51,19 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
               <rect x="8" y="8" width="5" height="5" rx="1" fill="white" opacity="0.3"/>
             </svg>
           </div>
-          <span className="font-semibold text-sm tracking-tight text-text-primary group-hover:text-text-secondary transition-colors">
-            VK Atlas
-          </span>
+          <div className="hidden sm:flex flex-col leading-tight">
+            <span className="font-semibold text-sm tracking-tight text-text-primary group-hover:text-text-secondary transition-colors">
+              VK Atlas
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.24em] text-text-muted">
+              Audio guide map
+            </span>
+          </div>
         </Link>
 
         {/* Search */}
         {showSearch && onSearchChange !== undefined && searchQuery !== undefined ? (
-          <div className="hidden md:flex flex-1 justify-center max-w-md">
+          <div className="hidden md:flex flex-1 justify-center max-w-xl px-4">
             <SearchBar
               query={searchQuery}
               onChange={onSearchChange}
@@ -68,7 +75,7 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
         )}
 
         {/* Controls */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0 rounded-full border border-border/70 bg-card/70 backdrop-blur-sm px-1.5 py-1 shadow-sm">
 
           <ThemeToggle />
 
@@ -78,7 +85,7 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
               type="button"
               onClick={() => setLangOpen(p => !p)}
               className={cn(
-                'flex items-center gap-1 h-8 px-2.5 rounded-[var(--radius-md)] text-xs font-medium',
+                'flex items-center gap-1 h-8 px-2.5 rounded-full text-xs font-medium',
                 'border border-border bg-card text-text-secondary hover:text-text-primary hover:border-border-hover',
                 'transition-colors cursor-pointer outline-none select-none',
                 langOpen && 'border-border-hover text-text-primary'
@@ -91,14 +98,14 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
             </button>
 
             {langOpen && (
-              <div className="absolute right-0 mt-1 w-36 rounded-[var(--radius-md)] border border-border bg-card shadow-md py-0.5 z-50 animate-slide-in-top">
+                <div className="absolute right-0 mt-1 w-40 rounded-2xl border border-border bg-card shadow-lg py-1 z-50 animate-slide-in-top overflow-hidden">
                 {LANGUAGES.map(lang => (
                   <button
                     key={lang.code}
                     type="button"
                     onClick={() => { i18n.changeLanguage(lang.code); setLangOpen(false); }}
                     className={cn(
-                      'flex items-center gap-2 w-full text-left px-3 py-1.5 text-xs font-medium cursor-pointer outline-none',
+                      'flex items-center gap-2 w-full text-left px-3 py-2 text-xs font-medium cursor-pointer outline-none',
                       'text-text-secondary hover:text-text-primary hover:bg-surface-alt transition-colors',
                       lang.code === i18n.language && 'text-text-primary font-semibold bg-surface-alt'
                     )}
@@ -115,7 +122,7 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
           {isAuthenticated ? (
             <Link
               to={role === 'admin' ? '/admin' : '/owner'}
-              className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-[var(--radius-md)] text-xs font-medium border border-border text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors outline-none cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-medium border border-border text-text-secondary hover:text-text-primary hover:border-border-hover transition-colors outline-none cursor-pointer"
             >
               <LayoutDashboard size={13} />
               {role === 'admin' ? t('nav.adminDashboard', 'Admin') : t('nav.ownerDashboard', 'Dashboard')}
@@ -123,7 +130,7 @@ export default function Header({ searchQuery, onSearchChange, showSearch = true 
           ) : (
             <button
               onClick={() => setLoginModalOpen(true)}
-              className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-[var(--radius-md)] text-xs font-semibold text-white bg-primary hover:bg-primary-hover transition-colors outline-none cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-semibold text-white bg-primary hover:bg-primary-hover transition-colors outline-none cursor-pointer shadow-sm shadow-primary/10"
             >
               <LogIn size={13} />
               {t('nav.login', 'Sign in')}

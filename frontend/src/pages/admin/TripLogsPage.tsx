@@ -5,7 +5,8 @@ import { useToast } from '@/components/ui/Toast';
 import { Loader2, Search, Map, List, Eye, QrCode, Compass, HelpCircle, ArrowUpDown } from 'lucide-react';
 import MapView from '@/components/map/MapView';
 import { useMap } from '@/contexts/MapContext';
-import mapboxgl from 'mapbox-gl';
+import { CircleMarker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 
 interface VisitLogItem {
   id: number;
@@ -19,137 +20,53 @@ interface VisitLogItem {
   visitedAt: string;
 }
 
-// Child component that adds the heatmap layer to the active Mapbox instance
+// Child component that renders a lightweight density overlay on the active Leaflet map
 function VisitHeatmapLayer({ points }: { points: { lat: number; lng: number; weight: number; name: string }[] }) {
   const { map } = useMap();
 
   useEffect(() => {
     if (!map || points.length === 0) return;
 
-    const sourceId = 'visits-heatmap-source';
-    const layerId = 'visits-heatmap-layer';
-    const pointLayerId = 'visits-point-layer';
-
-    const geojson = {
-      type: 'FeatureCollection',
-      features: points.map((p) => ({
-        type: 'Feature',
-        properties: {
-          weight: p.weight,
-          name: p.name,
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [p.lng, p.lat],
-        },
-      })),
-    };
-
-    // Add source
-    if (map.getSource(sourceId)) {
-      (map.getSource(sourceId) as mapboxgl.GeoJSONSource).setData(geojson as any);
-    } else {
-      map.addSource(sourceId, {
-        type: 'geojson',
-        data: geojson as any,
-      });
-
-      // Add heatmap layer
-      map.addLayer({
-        id: layerId,
-        type: 'heatmap',
-        source: sourceId,
-        maxzoom: 18,
-        paint: {
-          // Increase the heatmap weight based on weight property
-          'heatmap-weight': [
-            'interpolate',
-            ['linear'],
-            ['get', 'weight'],
-            0, 0,
-            10, 1,
-          ],
-          // Increase the heatmap color weight weight by zoom level
-          'heatmap-intensity': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            0, 1,
-            16, 3,
-          ],
-          // Color ramp for heatmap. Domain is 0 (low) to 1 (high).
-          'heatmap-color': [
-            'interpolate',
-            ['linear'],
-            ['heatmap-density'],
-            0, 'rgba(33,102,172,0)',
-            0.2, 'rgba(45,212,191,0.5)',  // Teal
-            0.4, 'rgba(34,197,94,0.7)',   // Green
-            0.6, 'rgba(234,179,8,0.8)',   // Yellow
-            0.8, 'rgba(249,115,22,0.9)',  // Orange
-            1, 'rgba(239,68,68,1)',       // Red
-          ],
-          // Adjust the heatmap radius by zoom level
-          'heatmap-radius': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            0, 6,
-            16, 45,
-          ],
-          'heatmap-opacity': 0.8,
-        },
-      });
-
-      // Add circle points on top when zoomed in
-      map.addLayer({
-        id: pointLayerId,
-        type: 'circle',
-        source: sourceId,
-        minzoom: 14,
-        paint: {
-          'circle-radius': [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            14, 5,
-            18, 14,
-          ],
-          'circle-color': '#f26522',
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 1.5,
-          'circle-opacity': 0.9,
-        },
-      });
-    }
-
     // Zoom map bounds to fit points
     try {
-      const bounds = points.reduce(
-        (acc, p) => acc.extend([p.lng, p.lat]),
-        new mapboxgl.LngLatBounds([points[0].lng, points[0].lat], [points[0].lng, points[0].lat])
-      );
-      map.fitBounds(bounds, {
-        padding: 60,
-        maxZoom: 16.5,
-      });
+      const bounds = L.latLngBounds(points.map((p) => [p.lat, p.lng] as L.LatLngExpression));
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16.5 });
     } catch (e) {
       console.warn('Error adjusting map bounds:', e);
     }
 
-    return () => {
-      if (!map) return;
-      try {
-        if (map.getLayer(layerId)) map.removeLayer(layerId);
-        if (map.getLayer(pointLayerId)) map.removeLayer(pointLayerId);
-        if (map.getSource(sourceId)) map.removeSource(sourceId);
-      } catch (e) {
-        console.warn('Error cleaning up heatmap layer:', e);
-      }
-    };
   }, [map, points]);
 
-  return null;
+  return (
+    <>
+      {points.map((point) => {
+        const intensity = Math.min(point.weight, 12);
+        const radius = 8 + intensity * 2.5;
+        const opacity = Math.min(0.18 + intensity * 0.04, 0.85);
+
+        return (
+          <CircleMarker
+            key={`${point.lat}-${point.lng}-${point.name}`}
+            center={[point.lat, point.lng]}
+            radius={radius}
+            pathOptions={{
+              color: '#f97316',
+              weight: 1,
+              fillColor: intensity > 8 ? '#ef4444' : intensity > 4 ? '#f59e0b' : '#14b8a6',
+              fillOpacity: opacity,
+            }}
+          >
+            <Popup>
+              <div className="space-y-1">
+                <div className="font-bold text-sm text-text-primary">{point.name}</div>
+                <div className="text-xs text-text-secondary">{point.weight} lượt ghé thăm</div>
+              </div>
+            </Popup>
+          </CircleMarker>
+        );
+      })}
+    </>
+  );
 }
 
 export default function TripLogsPage() {

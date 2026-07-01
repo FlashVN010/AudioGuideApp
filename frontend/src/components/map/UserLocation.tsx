@@ -4,7 +4,7 @@ import L from 'leaflet';
 import { useGeolocation } from '@/hooks/useGeolocation';
 
 export default function UserLocation() {
-  const { position } = useGeolocation();
+  const { position, accuracy } = useGeolocation();
   const leafletMap = useLeafletMap();
   const markerRef = useRef<L.Marker | null>(null);
   const circleRef = useRef<L.Circle | null>(null);
@@ -18,7 +18,7 @@ export default function UserLocation() {
       return;
     }
 
-    const { latitude, longitude, accuracy } = position;
+    const { latitude, longitude } = position;
     const latlng: L.LatLngExpression = [latitude, longitude];
 
     // Pulsing blue dot icon

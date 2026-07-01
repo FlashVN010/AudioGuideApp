@@ -1,6 +1,15 @@
 import axios from 'axios';
 import type { RefreshTokenRequest } from '@/types/auth';
 
+function resolveApiBaseUrl() {
+  const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (!configuredBaseUrl) {
+    return '/api';
+  }
+
+  return configuredBaseUrl.replace(/\/$/, '');
+}
+
 // Auth state sync event emitter
 type AuthUpdateListener = (data: { accessToken: string; refreshToken: string; role: string; expiresAt: string }) => void;
 const authListeners: AuthUpdateListener[] = [];
@@ -28,7 +37,7 @@ function getAuthKeys() {
 }
 
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: resolveApiBaseUrl(),
 });
 
 // Attach Bearer token to every request if one exists
@@ -86,10 +95,7 @@ api.interceptors.response.use(
 
     try {
       const payload: RefreshTokenRequest = { refreshToken: storedRefresh };
-      const { data } = await axios.post<any>(
-        '/api/auth/refresh',
-        payload,
-      );
+      const { data } = await api.post<any>('/auth/refresh', payload);
 
       localStorage.setItem(tokenKey, data.accessToken);
       localStorage.setItem(refreshKey, data.refreshToken);

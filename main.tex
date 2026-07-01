@@ -1,0 +1,437 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[vietnamese]{babel}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\setmainfont{TeX Gyre Termes}
+\setstretch{1.35}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    pdftitle={Báo cáo đồ án môn học},
+    pdfauthor={AudioGuideApp}
+}
+
+\titleformat{\chapter}{\normalfont\huge\bfseries}{CHƯƠNG \thechapter.}{12pt}{}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{10pt}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{8pt}{}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.8mm}}
+
+\newcommand{\reportfigure}[2]{%
+\begin{figure}[H]
+    \centering
+    \IfFileExists{#1}{%
+        \includegraphics[width=0.92\linewidth]{#1}%
+    }{%
+        \fbox{\parbox[c][6cm][c]{0.92\linewidth}{\centering Chèn hình tại đây\\\texttt{#1}}}%
+    }
+    \caption{#2}
+\end{figure}
+}
+
+\newcommand{\usecaseheader}{%
+\rowcolors{2}{gray!8}{white}
+\begin{longtable}{|c|p{3cm}|p{5cm}|p{5.2cm}|}
+\hline
+\textbf{\#} & \textbf{ID} & \textbf{Tên Use Case} & \textbf{Mô tả}\\
+\hline
+\endfirsthead
+\hline
+\textbf{\#} & \textbf{ID} & \textbf{Tên Use Case} & \textbf{Mô tả}\\
+\hline
+\endhead
+}
+
+\newcommand{\usecaserow}[4]{#1 & #2 & #3 & #4\\\hline}
+
+\newcommand{\detailtable}[6]{%
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{|p{3.4cm}|Y|}
+\hline
+\textbf{Tên use case} & #1 \\
+\hline
+\textbf{Mô tả} & #2 \\
+\hline
+\textbf{Actor} & #3 \\
+\hline
+\textbf{Tiền điều kiện} & #4 \\
+\hline
+\textbf{Hậu điều kiện} & #5 \\
+\hline
+\textbf{Luồng sự kiện chính} & #6 \\
+\hline
+\end{tabularx}
+\end{table}
+}
+
+\begin{document}
+
+% =========================
+% BIA
+% =========================
+\begin{titlepage}
+    \centering
+    {\Large \textbf{TRƯỜNG ĐẠI HỌC SÀI GÒN}\\[2pt]
+    \textbf{KHOA CÔNG NGHỆ THÔNG TIN}}\\[1.5cm]
+
+    \IfFileExists{figures/sgu-logo.png}{%
+        \includegraphics[width=4cm]{figures/sgu-logo.png}\\[1.2cm]
+    }{%
+        \vspace*{1cm}
+        \fbox{\parbox[c][4cm][c]{4cm}{\centering Logo}}\\[1.2cm]
+    }
+
+    {\LARGE \textbf{BÁO CÁO ĐỒ ÁN MÔN HỌC}}\\[0.4cm]
+    {\Large \textbf{NGÔN NGỮ LẬP TRÌNH C\#}}\\[1.2cm]
+
+    {\large \textbf{Đề tài:}}\\[0.3cm]
+    {\LARGE \textbf{ỨNG DỤNG THUYẾT MINH TỰ ĐỘNG DÀNH CHO PHỐ ẨM THỰC VĨNH KHÁNH}}\\[1.2cm]
+
+    {\large Giáo viên hướng dẫn: \textbf{TS. Nguyễn Quốc Huy}}\\[2.5cm]
+
+    \vfill
+    {\large Thành phố Hồ Chí Minh, Tháng 05 năm 2026}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+% =========================
+% CHUONG 1
+% =========================
+\chapter{Tổng quan dự án}
+\section{Giới thiệu}
+TravelSystem Mobile là giải pháp hướng dẫn du lịch thông minh theo tour, được tối ưu cho trải nghiệm offline-first, thuyết minh tự động và định vị thời gian thực. Hệ thống đồng thời cung cấp cổng quản trị web để quản lý điểm đến, tuyến đường, mã QR, nội dung thuyết minh và thống kê hành vi người dùng.
+
+\section{Mục tiêu}
+\begin{itemize}[leftmargin=1.2cm]
+    \item Hỗ trợ du khách xem điểm đến, nghe thuyết minh, quét QR và lưu điểm yêu thích.
+    \item Hỗ trợ quản trị viên và chủ cửa hàng quản lý POI, tour, thống kê và nội dung.
+    \item Đồng bộ dữ liệu giữa backend, web và mobile bằng cùng một bộ API.
+\end{itemize}
+
+% =========================
+% CHUONG 2
+% =========================
+\chapter{Chân dung người dùng \& tương tác}
+\section{Đối tượng sử dụng}
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Du khách}: sử dụng trên mobile để tham quan, định vị, nghe thuyết minh.
+    \item \textbf{Chủ cửa hàng (Vendor)}: quản lý thông tin cửa hàng, POI, tour, giờ hoạt động và nội dung.
+    \item \textbf{Quản trị viên (Admin)}: quản trị hệ thống, báo cáo, duyệt tài khoản và giám sát hoạt động.
+\end{itemize}
+
+\section{Use Case tổng quát}
+\reportfigure{figures/usecase-overview.png}{Sơ đồ use case tổng quát}
+
+\section{Use Case Mobile Client}
+\reportfigure{figures/usecase-mobile.png}{Use case dành cho du khách}
+
+\section{Use Case Web Admin}
+\reportfigure{figures/usecase-admin.png}{Use case dành cho quản trị viên}
+
+\section{Use Case Web Vendor}
+\reportfigure{figures/usecase-vendor.png}{Use case dành cho chủ cửa hàng}
+
+\section{Ma trận Use Case}
+\small
+\begin{longtable}{|c|p{2.2cm}|p{4cm}|p{7.2cm}|}
+\hline
+\textbf{\#} & \textbf{ID} & \textbf{Tên Use Case} & \textbf{Mô tả}\\
+\hline
+\endfirsthead
+\hline
+\textbf{\#} & \textbf{ID} & \textbf{Tên Use Case} & \textbf{Mô tả}\\
+\hline
+\endhead
+\usecaserow{1}{UC01}{Đăng ký}{Cho phép chủ cửa hàng tạo tài khoản.}
+\usecaserow{2}{UC02}{Đăng nhập}{Cho phép actor đăng nhập vào hệ thống.}
+\usecaserow{3}{UC03}{Xem số liệu tổng quát}{Cho phép xem dữ liệu thống kê tổng quan.}
+\usecaserow{4}{UC04}{Theo dõi lưu lượng truy cập}{Cho phép theo dõi lưu lượng truy cập.}
+\usecaserow{5}{UC05}{Phân tích xu hướng POI}{Cho phép phân tích xu hướng điểm đến.}
+\usecaserow{6}{UC06}{Thống kê đăng ký kinh doanh}{Cho phép thống kê đăng ký kinh doanh.}
+\usecaserow{7}{UC07}{Tạo POI mới}{Cho phép tạo POI mới.}
+\usecaserow{8}{UC08}{Sửa POI}{Cho phép chỉnh sửa POI.}
+\usecaserow{9}{UC09}{Xóa POI}{Cho phép xóa POI.}
+\usecaserow{10}{UC10}{Tạo tour mới}{Cho phép tạo tour mới.}
+\usecaserow{11}{UC11}{Sửa tour}{Cho phép sửa tour.}
+\usecaserow{12}{UC12}{Xóa tour}{Cho phép xóa tour.}
+\usecaserow{13}{UC13}{Duyệt thuyết minh}{Cho phép duyệt nội dung thuyết minh.}
+\usecaserow{14}{UC14}{Chỉnh sửa thuyết minh}{Cho phép cập nhật nội dung thuyết minh.}
+\usecaserow{15}{UC15}{Tạo QR mới}{Cho phép tạo QR mới.}
+\usecaserow{16}{UC16}{Vô hiệu hóa QR}{Cho phép vô hiệu hóa mã QR.}
+\usecaserow{17}{UC17}{Xem bản đồ nhiệt}{Cho phép xem bản đồ nhiệt.}
+\usecaserow{18}{UC18}{Xem danh sách hoạt động}{Cho phép xem danh sách hoạt động gần nhất.}
+\usecaserow{19}{UC19}{Thêm tài khoản admin}{Cho phép tạo tài khoản admin.}
+\usecaserow{20}{UC20}{Duyệt đăng ký vendor}{Cho phép duyệt tài khoản vendor.}
+\usecaserow{21}{UC21}{Khóa/tạm ngưng tài khoản}{Cho phép khóa hoặc tạm ngưng tài khoản.}
+\usecaserow{22}{UC22}{Thống kê lưu lượng khách}{Cho phép xem thống kê khách ghé thăm.}
+\usecaserow{23}{UC23}{Phân tích mức độ quan tâm}{Cho phép phân tích POI được quan tâm nhiều.}
+\usecaserow{24}{UC24}{Thêm nội dung mới}{Cho phép thêm nội dung mới.}
+\usecaserow{25}{UC25}{Sửa nội dung}{Cho phép sửa nội dung hiện có.}
+\usecaserow{26}{UC26}{Cập nhật thông tin cơ bản}{Cho phép cập nhật thông tin cơ bản.}
+\usecaserow{27}{UC27}{Thiết lập thời gian hoạt động}{Cho phép thiết lập giờ mở cửa.}
+\usecaserow{28}{UC28}{Định vị vị trí trên bản đồ}{Cho phép định vị người dùng.}
+\usecaserow{29}{UC29}{Xem chi tiết POI}{Cho phép xem chi tiết địa điểm.}
+\usecaserow{30}{UC30}{Thêm POI yêu thích}{Cho phép thêm POI yêu thích.}
+\usecaserow{31}{UC31}{Nghe thuyết minh tự động}{Cho phép phát audio theo vị trí.}
+\usecaserow{32}{UC32}{Nghe thuyết minh chủ động}{Cho phép tự chọn phát thuyết minh.}
+\usecaserow{33}{UC33}{Xem chi tiết địa điểm}{Cho phép xem chi tiết địa điểm.}
+\usecaserow{34}{UC34}{Bỏ yêu thích địa điểm}{Cho phép bỏ khỏi danh sách yêu thích.}
+\usecaserow{35}{UC35}{Nghe lại thuyết minh}{Cho phép phát lại nội dung.}
+\usecaserow{36}{UC36}{Thay đổi ngôn ngữ}{Cho phép đổi ngôn ngữ giao diện/nội dung.}
+\usecaserow{37}{UC37}{Tạo lại QR}{Cho phép tạo lại mã QR.}
+\usecaserow{38}{UC38}{Quét QR}{Cho phép quét QR để mở nội dung.}
+\end{longtable}
+\normalsize
+
+\section{Đặc tả Use Case}
+\subsection{UC01 -- Đăng ký}
+\detailtable
+{Đăng ký}
+{Use case cho phép người dùng tạo tài khoản để đăng nhập vào hệ thống.}
+{Vendor}
+{Người dùng chưa đăng nhập Vendor.}
+{Tài khoản Vendor ở trạng thái chờ duyệt; chưa đăng nhập được cho đến khi Admin kích hoạt.}
+{Người dùng nhập thông tin, nhấn Đăng ký, hệ thống kiểm tra dữ liệu, tạo tài khoản mới và thông báo kết quả.}
+
+\subsection{UC02 -- Đăng nhập}
+\detailtable
+{Đăng nhập}
+{Use case cho phép người dùng đăng nhập và sử dụng các chức năng theo vai trò.}
+{Người dùng}
+{Người dùng đã đăng ký tài khoản trong hệ thống.}
+{Người dùng đăng nhập thành công và được chuyển đến màn hình chính phù hợp.}
+{Người dùng nhập tên đăng nhập và mật khẩu, hệ thống xác thực và điều hướng đến trang tương ứng.}
+
+\subsection{UC03 -- Xem số liệu tổng quát}
+\detailtable
+{Xem số liệu tổng quát}
+{Quản trị viên xem chỉ số tổng quan hệ thống trên dashboard để theo dõi hoạt động người dùng, POI, thuyết minh, QR scan và xu hướng sử dụng.}
+{Admin}
+{Người dùng có quyền Admin hợp lệ.}
+{Dashboard hiển thị thành công với dữ liệu thống kê mới nhất.}
+{Admin truy cập Dashboard, hệ thống tổng hợp số liệu và render các thẻ, biểu đồ, bảng dữ liệu.}
+
+\subsection{UC04 -- Theo dõi lưu lượng truy cập}
+\detailtable
+{Theo dõi lưu lượng truy cập}
+{Admin theo dõi lưu lượng theo thời gian thực thông qua bảng nhật ký và bản đồ trực quan.}
+{Admin}
+{Đã đăng nhập và có quyền quản trị.}
+{Dữ liệu truy cập mới nhất được hiển thị, tự làm mới theo chu kỳ.}
+{Hệ thống tải dữ liệu, nhóm theo ngày/giờ và vẽ biểu đồ + heatmap.}
+
+\subsection{UC05 -- Phân tích mức độ quan tâm}
+\detailtable
+{Phân tích mức độ quan tâm}
+{Admin xem xu hướng POI theo lượt nghe, lượt thích, lượt quét QR và hành vi tương tác.}
+{Admin}
+{Có dữ liệu nghe thuyết minh và/hoặc dữ liệu yêu thích POI.}
+{Dashboard hiển thị top POI nổi bật theo chỉ số đã chọn.}
+{Hệ thống truy vấn, gom nhóm và xếp hạng dữ liệu để trình bày trên dashboard.}
+
+\subsection{UC06 -- Thống kê đăng ký kinh doanh}
+\detailtable
+{Thống kê đăng ký kinh doanh}
+{Admin xem số liệu đăng ký tài khoản chủ cửa hàng theo tháng và theo ngày.}
+{Admin}
+{Đã đăng nhập và có quyền quản trị.}
+{Biểu đồ và bảng số liệu được hiển thị đầy đủ.}
+{Hệ thống truy vấn bảng Users, lọc tài khoản Vendor và dựng biểu đồ theo mốc thời gian.}
+
+% =========================
+% CHUONG 3
+% =========================
+\chapter{Câu chuyện người dùng \& tiêu chí nghiệm thu}
+\section{Nhóm Mobile Client}
+\begin{longtable}{|p{2.2cm}|p{5cm}|p{7.5cm}|}
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Acceptance Criteria}\\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Acceptance Criteria}\\
+\hline
+\endhead
+US-01 & Khởi tạo ẩn danh & App sinh GuestId/SessionId ngay lần đầu mở mà không cần đăng ký.\\\hline
+US-02 & Cấp quyền \& nạp dữ liệu & Xin quyền vị trí và đồng bộ dữ liệu ngầm để tránh trễ khi vào màn hình chính.\\\hline
+US-03 & Khám phá tour & Hiển thị danh sách tour/tuyến đường tại Home để người dùng lựa chọn.\\\hline
+US-04 & Kích hoạt Audio tự động & Tự động phát audio khi vào đúng bán kính 9m.\\\hline
+US-05 & Focus bản đồ & Tự động zoom/focus POI gần nhất và giữ ổn định khi đứng giữa hai điểm.\\\hline
+US-06 & Quét mã QR & Quét QR thành công sẽ mở chi tiết điểm đến và cho phép phát thuyết minh.\\\hline
+US-07 & Xem chi tiết \& lưu offline & Xem chi tiết nhanh, có thể lưu xuống local để truy cập khi mất mạng.\\\hline
+US-08 & Quản lý cài đặt & Đổi ngôn ngữ/giao diện mà không mất trạng thái phiên làm việc.\\\hline
+\end{longtable}
+
+\section{Nhóm Web Admin}
+\begin{longtable}{|p{2.2cm}|p{5cm}|p{7.5cm}|}
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Acceptance Criteria}\\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Acceptance Criteria}\\
+\hline
+\endhead
+US-ADM-01 & Quản lý tuyến đường \& điểm đến & Admin có quyền tạo, sửa, xóa Tour/Route/POI.\\\hline
+US-ADM-02 & Cấu hình đa ngôn ngữ & Thay đổi nội dung tự động thành công theo ngôn ngữ.\\\hline
+US-ADM-03 & Xem bản đồ nhiệt & Hiển thị chính xác mật độ người dùng trên bản đồ quản trị.\\\hline
+\end{longtable}
+
+\section{Nhóm Web Vendor}
+\begin{longtable}{|p{2.2cm}|p{5cm}|p{7.5cm}|}
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Acceptance Criteria}\\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Acceptance Criteria}\\
+\hline
+\endhead
+US-VEN-01 & Cập nhật trạng thái real-time & Chủ quán thay đổi trạng thái hoạt động/mở cửa và hệ thống cập nhật ngay.\\\hline
+US-VEN-02 & Cập nhật khung giờ hoạt động & Chỉnh sửa giờ mở cửa và lưu thành công vào hệ thống.\\\hline
+US-VEN-03 & Quản lý nội dung địa điểm & Thêm/sửa nội dung hiển thị cho khách tham quan.\\\hline
+\end{longtable}
+
+% =========================
+% CHUONG 4
+% =========================
+\chapter{Kiến trúc hệ thống \& luồng trải nghiệm}
+\section{Kiến trúc tổng thể}
+\reportfigure{figures/architecture-overview.png}{Sơ đồ kiến trúc tổng thể}
+
+\section{Luồng trải nghiệm lõi}
+\subsection{Giai đoạn tiếp cận \& khởi tạo}
+Hệ thống xác thực phiên ẩn danh, nạp dữ liệu nền và chuẩn bị tài nguyên trước khi người dùng bắt đầu hành trình.
+
+\subsection{Giai đoạn di chuyển \& nhận diện}
+Hệ thống theo dõi vị trí GPS, áp dụng hysteresis và stationary lock để giảm nhiễu và tiết kiệm pin.
+
+\subsection{Giai đoạn tương tác âm thanh}
+Audio phù hợp với ngôn ngữ được chọn sẽ phát khi người dùng tiến vào vùng kích hoạt của POI.
+
+\subsection{Giai đoạn ghi nhận \& phản hồi}
+Các lượt xem, lượt nghe, lượt quét QR và tương tác được ghi vào analytics để phục vụ dashboard.
+
+\section{Giải pháp kỹ thuật thông minh}
+\begin{itemize}[leftmargin=1.2cm]
+    \item Geofencing với bán kính kích hoạt chuẩn.
+    \item Stationary Lock để giảm tần suất xử lý khi đứng yên.
+    \item Heading Assist để chọn POI hướng phía trước.
+\end{itemize}
+
+\reportfigure{figures/core-journey.png}{Sơ đồ luồng trải nghiệm người dùng}
+
+% =========================
+% CHUONG 5
+% =========================
+\chapter{Thiết kế hệ thống chi tiết}
+\section{Cấu trúc dữ liệu vật lý}
+\small
+\begin{longtable}{|p{3.4cm}|p{2.4cm}|p{1.8cm}|p{1.8cm}|p{2.3cm}|p{4cm}|}
+\hline
+\textbf{Thuộc tính} & \textbf{Kiểu dữ liệu} & \textbf{Khóa chính} & \textbf{Khóa ngoại} & \textbf{Allow Null} & \textbf{Mô tả}\\
+\hline
+\endfirsthead
+\hline
+\textbf{Thuộc tính} & \textbf{Kiểu dữ liệu} & \textbf{Khóa chính} & \textbf{Khóa ngoại} & \textbf{Allow Null} & \textbf{Mô tả}\\
+\hline
+\endhead
+Id & Int & X &  &  & Mã định danh\\\hline
+Name & Nvarchar(100) &  &  &  & Tên hiển thị\\\hline
+Description & Nvarchar(1000) &  &  & X & Mô tả\\\hline
+ImageUrl & Nvarchar(500) &  &  & X & Ảnh đại diện\\\hline
+Latitude & Decimal(10,8) &  &  &  & Vĩ độ\\\hline
+Longitude & Decimal(11,8) &  &  &  & Kinh độ\\\hline
+CreatedAt & DateTime &  &  & X & Thời điểm tạo\\\hline
+UpdatedAt & DateTime &  &  & X & Thời điểm cập nhật\\\hline
+\end{longtable}
+\normalsize
+
+\section{Sơ đồ tuần tự}
+\reportfigure{figures/sequence-login.png}{Sequence đăng nhập}
+\reportfigure{figures/sequence-scanqr.png}{Sequence quét QR}
+\reportfigure{figures/sequence-audio.png}{Sequence nghe thuyết minh tự động}
+
+% =========================
+% CHUONG 6
+% =========================
+\chapter{Cơ chế offline-first \& đồng bộ}
+\section{Khởi tạo \& đồng bộ ban đầu}
+Ứng dụng lưu cấu hình và dữ liệu cục bộ để có thể hoạt động khi mất mạng, đồng thời đồng bộ lại khi có kết nối.
+
+\section{Snapshot synchronization}
+Thay vì cập nhật rời rạc, hệ thống tải lại snapshot metadata và cập nhật hàng loạt vào SQLite.
+
+\section{Favorite offline}
+Tác vụ thêm/bỏ yêu thích được đưa vào hàng đợi cục bộ và flush đồng bộ khi có mạng.
+
+% =========================
+% CHUONG 7
+% =========================
+\chapter{Cấu trúc mã nguồn}
+\section{Web Admin}
+\reportfigure{figures/admin-class-structure.png}{Sơ đồ lớp chức năng Web Admin}
+
+\section{Web Vendor}
+\reportfigure{figures/vendor-class-structure.png}{Sơ đồ lớp chức năng Web Vendor}
+
+\section{Guest / Mobile}
+\reportfigure{figures/mobile-class-structure.png}{Sơ đồ lớp chức năng app}
+
+% =========================
+% CHUONG 8
+% =========================
+\chapter{Activities diagram}
+\reportfigure{figures/activity-login.png}{Activity đăng nhập}
+\reportfigure{figures/activity-register-vendor.png}{Activity đăng ký vendor mới}
+\reportfigure{figures/activity-map.png}{Activity định vị vị trí trên bản đồ}
+\reportfigure{figures/activity-poi-detail.png}{Activity xem chi tiết POI}
+\reportfigure{figures/activity-favorite.png}{Activity thêm POI yêu thích}
+\reportfigure{figures/activity-audio-auto.png}{Activity nghe thuyết minh tự động}
+\reportfigure{figures/activity-audio-manual.png}{Activity nghe thuyết minh chủ động}
+\reportfigure{figures/activity-qr.png}{Activity quét mã QR}
+
+% =========================
+% CHUONG 9
+% =========================
+\chapter{Lộ trình triển khai \& milestones}
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Phase 1}: Thiết lập SQLite và cơ chế đồng bộ snapshot.
+    \item \textbf{Phase 2}: Xây dựng GPS engine, hysteresis và stationary lock.
+    \item \textbf{Phase 3}: Hoàn thiện giao diện app (Home, Map, Saved, Settings).
+    \item \textbf{Phase 4}: Tích hợp Audio, QR Code và thử nghiệm thực địa.
+\end{itemize}
+
+\chapter*{Kết luận}
+\addcontentsline{toc}{chapter}{Kết luận}
+Tài liệu này là bản khung Overleaf/LaTeX để dựng báo cáo theo đúng bố cục trong ảnh chụp: có trang bìa, mục lục, sơ đồ use case, bảng mô tả use case, user story, kiến trúc hệ thống, thiết kế dữ liệu, sequence diagram, activity diagram và lộ trình triển khai. Bạn chỉ cần thay các file hình trong thư mục \texttt{figures/} bằng sơ đồ thật hoặc ảnh chụp từ UML là có thể xuất PDF.
+
+\end{document}

@@ -12,6 +12,8 @@ export const TILE_LAYERS = {
   satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 } as const;
 
+export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN?.trim() ?? '';
+
 export const TILE_ATTRIBUTIONS = {
   light: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
   dark: '© <a href="https://openstreetmap.org">OpenStreetMap</a> © <a href="https://carto.com">CARTO</a>',

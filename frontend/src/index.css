@@ -127,6 +127,15 @@
     margin: 0;
     min-height: 100dvh;
     line-height: 1.55;
+    background:
+      radial-gradient(circle at top left, oklch(0.92 0.06 75 / 0.42), transparent 28%),
+      radial-gradient(circle at top right, oklch(0.88 0.04 180 / 0.20), transparent 24%),
+      linear-gradient(180deg, oklch(0.99 0.00 0), oklch(0.97 0.00 0));
+    background-attachment: fixed;
+  }
+
+  #root {
+    min-height: 100dvh;
   }
 
   h1, h2, h3, h4, h5, h6 {

@@ -1,4 +1,17 @@
-node_modules
-node_modules
-node_modules
-node_modules
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build results
+bin/
+obj/
+
+# Dependencies
+node_modules/
+.env
+
+# Others
+*.db
+*.db-shm
+*.db-wal

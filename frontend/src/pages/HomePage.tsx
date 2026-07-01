@@ -697,7 +697,12 @@ export default function HomePage() {
 
       {/* Welcome & Activation Lock Screen */}
       {!isActivated && !visitorLoading && !isAuthenticated && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface/90 backdrop-blur-md p-6 text-center select-none animate-fade-in">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-surface/95 via-surface/90 to-slate-100/80 dark:to-slate-950/80 backdrop-blur-xl p-6 text-center select-none animate-fade-in">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+            <div className="absolute top-16 right-12 h-64 w-64 rounded-full bg-teal-500/10 blur-3xl" />
+            <div className="absolute -bottom-24 left-1/3 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
+          </div>
           
           {/* Floating Theme & Language Switcher */}
           <div className="absolute top-6 right-6 flex items-center gap-3 z-55">
@@ -740,13 +745,18 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="w-full max-w-md bg-card border border-border/80 rounded-3xl shadow-2xl p-8 md:p-10 flex flex-col items-center gap-6 relative overflow-hidden">
+          <div className="w-full max-w-xl bg-card/95 backdrop-blur-sm border border-border/80 rounded-[2rem] shadow-2xl p-8 md:p-10 flex flex-col items-center gap-6 relative overflow-hidden z-10">
             {/* Decorative layout highlights */}
             <div className="absolute -top-12 -right-12 w-36 h-36 bg-primary/10 rounded-full blur-2xl" />
             <div className="absolute -bottom-12 -left-12 w-36 h-36 bg-accent/10 rounded-full blur-2xl" />
 
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2 shadow-inner">
-              <Compass size={32} className="animate-spin-slow" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-alt px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-text-secondary shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Live map, audio, QR, CMS
+            </div>
+
+            <div className="w-18 h-18 rounded-[1.35rem] bg-gradient-to-br from-primary/12 via-primary/6 to-teal-500/12 flex items-center justify-center text-primary mb-2 shadow-inner ring-1 ring-border/60">
+              <Compass size={34} className="animate-spin-slow" />
             </div>
 
             <div className="flex flex-col gap-2.5">
@@ -758,6 +768,21 @@ export default function HomePage() {
                   ? 'Chào mừng du khách! Bản đồ ẩm thực với thuyết minh âm thanh đa ngôn ngữ (22 thứ tiếng) đang chờ đón bạn.'
                   : 'Welcome visitors! Discover street food maps with multi-language audio guides (22 languages).'}
               </p>
+            </div>
+
+            <div className="grid w-full grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="rounded-2xl border border-border bg-surface-alt px-4 py-3 text-left shadow-sm">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted font-bold">Map</p>
+                <p className="mt-1 text-sm font-semibold text-text-primary">POI + geofence</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-surface-alt px-4 py-3 text-left shadow-sm">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted font-bold">Audio</p>
+                <p className="mt-1 text-sm font-semibold text-text-primary">TTS or uploaded voice</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-surface-alt px-4 py-3 text-left shadow-sm">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted font-bold">CMS</p>
+                <p className="mt-1 text-sm font-semibold text-text-primary">Admin & owner console</p>
+              </div>
             </div>
 
             <div className="w-full p-4 bg-surface-alt border border-border/50 rounded-2xl text-left flex flex-col gap-3">
@@ -789,7 +814,7 @@ export default function HomePage() {
             <div className="w-full flex flex-col gap-3.5 mt-2">
               <button
                 onClick={() => navigate('/activate')}
-                className="w-full h-11 rounded-xl bg-teal-600 text-white font-semibold text-xs hover:bg-teal-700 active:scale-95 transition-all shadow-lg shadow-teal-600/20 cursor-pointer flex items-center justify-center gap-2"
+                className="w-full h-11 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-semibold text-xs hover:from-teal-700 hover:to-emerald-700 active:scale-95 transition-all shadow-lg shadow-teal-600/20 cursor-pointer flex items-center justify-center gap-2"
               >
                 <span>{isVi ? 'Nhập thẻ kích hoạt trực tiếp (20.000đ)' : 'Enter activation card directly (20,000 VND)'}</span>
                 <ChevronRight size={14} />
@@ -799,12 +824,17 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <button
-            onClick={() => navigate('/owner/login')}
-            className="mt-6 px-6 h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs transition-all shadow-lg shadow-red-600/20 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 border-none outline-none"
-          >
-            {isVi ? 'Đăng nhập / Đăng ký đối tác' : 'Partner Login / Register'}
-          </button>
+          <div className="mt-6 flex flex-col sm:flex-row items-center gap-3 z-10">
+            <button
+              onClick={() => navigate('/owner/login')}
+              className="px-6 h-11 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-semibold text-xs transition-all shadow-lg shadow-red-600/20 cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 border-none outline-none"
+            >
+              {isVi ? 'Đăng nhập / Đăng ký đối tác' : 'Partner Login / Register'}
+            </button>
+            <span className="text-[10px] text-text-muted max-w-xs">
+              {isVi ? 'CMS quản lý POI, audio, QR và lịch sử dùng được tách riêng cho Admin / Owner.' : 'Separate admin and owner consoles handle POIs, audio, QR codes, and usage history.'}
+            </span>
+          </div>
         </div>
       )}
 

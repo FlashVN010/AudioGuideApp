@@ -1,18 +1,252 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
-             x:Class="AudioGuideApp.MainPage">
+             x:Class="AudioGuideApp.MainPage"
+             BackgroundColor="#08111F"
+             Shell.NavBarIsVisible="False">
 
-    <Grid>
-        <!-- Cái này là điều khiển bản đồ -->
-        <maps:Map x:Name="MyMap" IsShowingUser="True" />
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <LinearGradientBrush x:Key="HeroGradient" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#08111F" Offset="0" />
+                <GradientStop Color="#10223E" Offset="0.56" />
+                <GradientStop Color="#173556" Offset="1" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="AccentGradient" StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Color="#FF8A3D" Offset="0" />
+                <GradientStop Color="#EB5C3A" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-        <!-- Thêm một dòng chữ đè lên trên bản đồ để chào mừng -->
-        <VerticalStackLayout Grid.Row="0" Padding="30,50,30,30" Spacing="25" HorizontalOptions="Center" VerticalOptions="Start">
-            <Label Text="Ứng dụng thuyết minh tự động" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
-            <Label Text="Đang tải bản đồ vị trí..." FontSize="16" TextColor="White" HorizontalOptions="Center" />
-        </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,*">
+        <Grid Padding="24,52,24,28" Background="{StaticResource HeroGradient}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <VerticalStackLayout Spacing="12">
+                <Label Text="AudioGuideApp"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="White" />
+                <Label Text="Bản đồ thuyết minh tự động cho phố ẩm thực Vĩnh Khánh"
+                       FontSize="15"
+                       TextColor="#D7E5FF"
+                       LineBreakMode="WordWrap" />
+
+                <HorizontalStackLayout Spacing="8" Margin="0,10,0,0">
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 999" BackgroundColor="#1A2E4D" Padding="12,6">
+                        <Label x:Name="BackendStatusLabel" Text="Kết nối backend..." TextColor="White" FontSize="11" FontAttributes="Bold" />
+                    </Border>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 999" BackgroundColor="#1B3B35" Padding="12,6">
+                        <Label x:Name="ActivationStatusLabel" Text="Chưa kích hoạt" TextColor="#CBF2E6" FontSize="11" FontAttributes="Bold" />
+                    </Border>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Start" Spacing="8">
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 18" BackgroundColor="#11233B" Padding="14,10">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="POI" TextColor="#9CC4FF" FontSize="10" FontAttributes="Bold" />
+                        <Label x:Name="PoiCountLabel" Text="0" TextColor="White" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 18" BackgroundColor="#11233B" Padding="14,10">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Tour" TextColor="#9CC4FF" FontSize="10" FontAttributes="Bold" />
+                        <Label x:Name="TourCountLabel" Text="0" TextColor="White" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20" Spacing="18" Margin="0,-24,0,24">
+                <Border StrokeShape="RoundRectangle 24" BackgroundColor="#0E1A2D" Stroke="#204060" StrokeThickness="1" Padding="14">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                        <Entry x:Name="SearchEntry"
+                               Placeholder="Tìm POI, danh mục, tour..."
+                               TextChanged="OnSearchTextChanged"
+                               TextColor="White"
+                               PlaceholderColor="#88A0BE"
+                               BackgroundColor="Transparent"
+                               HeightRequest="46" />
+                        <Button Grid.Column="1"
+                                Text="Kích hoạt"
+                                Clicked="OnActivateClicked"
+                                BackgroundColor="#173556"
+                                TextColor="White"
+                                CornerRadius="16"
+                                Padding="18,12" />
+                        <Button Grid.Column="2"
+                                Text="Làm mới"
+                                Clicked="OnRefreshClicked"
+                                BackgroundColor="#EB5C3A"
+                                TextColor="White"
+                                CornerRadius="16"
+                                Padding="18,12" />
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border StrokeShape="RoundRectangle 22" BackgroundColor="#10233D" Stroke="#244468" StrokeThickness="1" Padding="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Lượt quét QR" TextColor="#9CC4FF" FontSize="10" FontAttributes="Bold" />
+                            <Label x:Name="QrCountLabel" Text="0" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                            <Label Text="Dựa trên dữ liệu visitor/analytics đã có" TextColor="#B8C6D8" FontSize="11" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" StrokeShape="RoundRectangle 22" BackgroundColor="#10233D" Stroke="#244468" StrokeThickness="1" Padding="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Đang hoạt động" TextColor="#9CC4FF" FontSize="10" FontAttributes="Bold" />
+                            <Label x:Name="ActiveVisitorsLabel" Text="0" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                            <Label x:Name="NearestPoiLabel" Text="Đang xác định điểm gần nhất..." TextColor="#B8C6D8" FontSize="11" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border StrokeShape="RoundRectangle 26" BackgroundColor="#0E1828" Stroke="#22405C" StrokeThickness="1" Padding="0" HeightRequest="320">
+                    <Grid>
+                        <maps:Map x:Name="PoiMap" IsShowingUser="True" />
+                        <VerticalStackLayout Padding="16" Spacing="6" VerticalOptions="End">
+                            <Border StrokeShape="RoundRectangle 999" BackgroundColor="#08111FCC" StrokeThickness="0" Padding="12,8" HorizontalOptions="Start">
+                                <Label x:Name="MapHintLabel" Text="Bản đồ POI và vị trí của bạn" TextColor="White" FontSize="11" FontAttributes="Bold" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border x:Name="PoiDetailCard" StrokeShape="RoundRectangle 26" BackgroundColor="#10233D" Stroke="#244468" StrokeThickness="1" Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12">
+                            <Border StrokeShape="RoundRectangle 18" BackgroundColor="#162C49" StrokeThickness="0" WidthRequest="84" HeightRequest="84">
+                                <Image x:Name="PoiImage" Aspect="AspectFill" />
+                            </Border>
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="FillAndExpand">
+                                <Label x:Name="PoiCategoryLabel" Text="POI nổi bật" TextColor="#FFB47D" FontSize="10" FontAttributes="Bold" />
+                                <Label x:Name="PoiTitleLabel" Text="Chọn một điểm để xem chi tiết" TextColor="White" FontSize="22" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+                                <Label x:Name="PoiMetaLabel" Text="Địa chỉ, rating, khoảng cách sẽ hiển thị tại đây" TextColor="#BCD1EB" FontSize="11" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <Label x:Name="PoiDescriptionLabel" Text="Chạm vào một POI bên dưới để nạp dữ liệu thật từ backend." TextColor="#D7E5FF" FontSize="13" LineBreakMode="WordWrap" />
+
+                        <HorizontalStackLayout Spacing="10">
+                            <Button x:Name="BookmarkButton"
+                                    Text="Lưu"
+                                    Clicked="OnBookmarkClicked"
+                                    BackgroundColor="#1A2E4D"
+                                    TextColor="White"
+                                    CornerRadius="16"
+                                    Padding="18,12" />
+                            <Button x:Name="MapButton"
+                                    Text="Mở bản đồ"
+                                    Clicked="OnOpenMapClicked"
+                                    Background="{StaticResource AccentGradient}"
+                                    TextColor="White"
+                                    CornerRadius="16"
+                                    Padding="18,12" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border x:Name="TourDetailCard" StrokeShape="RoundRectangle 26" BackgroundColor="#0F2035" Stroke="#244468" StrokeThickness="1" Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Tour đề xuất" TextColor="#FFB47D" FontSize="10" FontAttributes="Bold" />
+                        <Label x:Name="TourTitleLabel" Text="Chọn một tour để xem lộ trình" TextColor="White" FontSize="22" FontAttributes="Bold" />
+                        <Label x:Name="TourMetaLabel" Text="Thời lượng, quãng đường và các điểm dừng sẽ được nạp từ backend" TextColor="#BCD1EB" FontSize="11" />
+                        <Label x:Name="TourDescriptionLabel" Text="" TextColor="#D7E5FF" FontSize="13" LineBreakMode="WordWrap" />
+
+                        <CollectionView x:Name="TourStopsCollection" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeShape="RoundRectangle 16" BackgroundColor="#152A45" Stroke="#2B4768" StrokeThickness="1" Padding="12" Margin="0,0,0,10">
+                                        <VerticalStackLayout Spacing="4">
+                                            <Label Text="{Binding StopOrder, StringFormat='Stop {0}'}" TextColor="#FFB47D" FontSize="10" FontAttributes="Bold" />
+                                            <Label Text="{Binding PoiName}" TextColor="White" FontSize="15" FontAttributes="Bold" />
+                                            <Label Text="{Binding PoiShortDescription}" TextColor="#C5D7EC" FontSize="11" LineBreakMode="WordWrap" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 26" BackgroundColor="#0E1828" Stroke="#244468" StrokeThickness="1" Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout>
+                            <Label Text="Điểm thuyết minh" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="StartAndExpand" />
+                            <Label x:Name="PoiCountSubtitleLabel" Text="0 kết quả" TextColor="#9CC4FF" FontSize="11" HorizontalOptions="End" />
+                        </HorizontalStackLayout>
+                        <CollectionView x:Name="PoiCollection"
+                                        SelectionMode="Single"
+                                        SelectionChanged="OnPoiSelectionChanged">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeShape="RoundRectangle 22" BackgroundColor="#10233D" Stroke="#22405C" StrokeThickness="1" Padding="12" Margin="0,0,0,12">
+                                        <Grid ColumnDefinitions="88,*" ColumnSpacing="12">
+                                            <Border StrokeShape="RoundRectangle 18" BackgroundColor="#152A45" StrokeThickness="0" WidthRequest="88" HeightRequest="88">
+                                                <Image Source="{Binding ImageSource}" Aspect="AspectFill" />
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                                <Label Text="{Binding Name}" TextColor="White" FontSize="16" FontAttributes="Bold" />
+                                                <Label Text="{Binding Category}" TextColor="#FFB47D" FontSize="10" FontAttributes="Bold" />
+                                                <Label Text="{Binding ShortDescription}" TextColor="#D5E3F4" FontSize="12" LineBreakMode="TailTruncation" MaxLines="2" />
+                                                <HorizontalStackLayout Spacing="8">
+                                                    <Label Text="{Binding DistanceText}" TextColor="#9CC4FF" FontSize="11" FontAttributes="Bold" />
+                                                    <Label Text="{Binding RatingText}" TextColor="#9CC4FF" FontSize="11" FontAttributes="Bold" />
+                                                    <Label Text="{Binding PriceText}" TextColor="#9CC4FF" FontSize="11" FontAttributes="Bold" />
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 26" BackgroundColor="#0F2035" Stroke="#244468" StrokeThickness="1" Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout>
+                            <Label Text="Tour ẩm thực" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="StartAndExpand" />
+                            <Label x:Name="TourCountSubtitleLabel" Text="0 kết quả" TextColor="#9CC4FF" FontSize="11" HorizontalOptions="End" />
+                        </HorizontalStackLayout>
+                        <CollectionView x:Name="TourCollection"
+                                        SelectionMode="Single"
+                                        SelectionChanged="OnTourSelectionChanged"
+                                        ItemsLayout="VerticalList">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeShape="RoundRectangle 22" BackgroundColor="#11233B" Stroke="#244468" StrokeThickness="1" Padding="14" Margin="0,0,0,12">
+                                        <VerticalStackLayout Spacing="4">
+                                            <Label Text="{Binding Name}" TextColor="White" FontSize="16" FontAttributes="Bold" />
+                                            <Label Text="{Binding Description}" TextColor="#D5E3F4" FontSize="12" LineBreakMode="WordWrap" MaxLines="3" />
+                                            <HorizontalStackLayout Spacing="8">
+                                                <Label Text="{Binding DurationText}" TextColor="#9CC4FF" FontSize="11" FontAttributes="Bold" />
+                                                <Label Text="{Binding DistanceText}" TextColor="#9CC4FF" FontSize="11" FontAttributes="Bold" />
+                                                <Label Text="{Binding StopCountText}" TextColor="#9CC4FF" FontSize="11" FontAttributes="Bold" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid x:Name="LoadingOverlay" BackgroundColor="#08111FCC" IsVisible="False">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12">
+                <ActivityIndicator IsRunning="True" Color="White" />
+                <Label x:Name="LoadingLabel" Text="Đang nạp dữ liệu backend..." TextColor="White" FontAttributes="Bold" />
+            </VerticalStackLayout>
+        </Grid>
     </Grid>
-
 </ContentPage>

@@ -12,7 +12,6 @@ import {
   LogOut,
   Menu,
   X,
-  ClipboardCheck,
   Bell,
   History,
   Home,

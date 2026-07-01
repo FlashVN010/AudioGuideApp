@@ -213,7 +213,7 @@ export default function POIFormPage() {
 
   const handleMapClick = (lngLat: [number, number]) => {
     if (map) {
-      map.easeTo({ center: lngLat, duration: 400 });
+      map.flyTo([lngLat[1], lngLat[0]], map.getZoom(), { animate: true, duration: 0.4 });
     }
   };
 
@@ -249,7 +249,7 @@ export default function POIFormPage() {
   useEffect(() => {
     if (map && isEditMode && latitude && longitude) {
       isProgrammaticCenterRef.current = true;
-      map.setCenter([longitude, latitude]);
+      map.setView([latitude, longitude], map.getZoom());
     }
   }, [map, isEditMode]);
 
@@ -289,7 +289,7 @@ export default function POIFormPage() {
     setShowSuggestions(false);
     if (map) {
       isProgrammaticCenterRef.current = true;
-      map.flyTo({ center: [feature.center[0], feature.center[1]], zoom: 17, duration: 1500 });
+      map.flyTo([feature.center[1], feature.center[0]], 17, { animate: true, duration: 1.5 });
     }
   };
 

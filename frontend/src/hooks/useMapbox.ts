@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useMap } from '@/contexts/MapContext';
-import L from 'leaflet';
 
 // Hook giữ nguyên tên để không cần đổi import ở HomePage
 export function useMapbox() {
