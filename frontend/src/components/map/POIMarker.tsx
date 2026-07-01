@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Marker, Popup, useMap as useLeafletMap } from 'react-leaflet';
 import L from 'leaflet';
-import { renderToString } from 'react-dom/server';
 import type { POIListItem, POI } from '@/types/poi';
 import MarkerPopup from './MarkerPopup';
 
