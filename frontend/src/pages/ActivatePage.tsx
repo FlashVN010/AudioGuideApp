@@ -111,12 +111,7 @@ export default function ActivatePage() {
       return;
     }
 
-    console.log('Submitting activation request:', {
-      sessionId,
-      code: code || undefined,
-      cardNumber: cleanCard,
-      cardHolder: cardHolder.toUpperCase()
-    });
+    setLoading(true);
 
     setSubmitting(true);
     try {

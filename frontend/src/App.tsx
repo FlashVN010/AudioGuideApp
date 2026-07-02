@@ -153,7 +153,6 @@ export default function App() {
       </Routes>
 
       {loginModalOpen && (
-        // @ts-ignore - LoginModal props typing mismatch; runtime accepts onClose
         <LoginModal onClose={() => setLoginModalOpen(false)} />
       )}
     </Suspense>

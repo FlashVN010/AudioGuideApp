@@ -11,7 +11,11 @@ obj/
 node_modules/
 .env
 
-# Others
+# Database
 *.db
 *.db-shm
 *.db-wal
+
+# Generated files
+wwwroot/qrcodes/
+wwwroot/audio/

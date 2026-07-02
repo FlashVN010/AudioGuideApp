@@ -18,17 +18,6 @@ namespace src.Services
             _context = context;
         }
 
-        // Constructor for testing / fallback instantiation
-        public TourService()
-        {
-            _context = null!;
-        }
-
-        private AppDbContext GetContext(AppDbContext? context)
-        {
-            return context ?? _context;
-        }
-
         public async Task<IEnumerable<TourListDto>> GetActiveToursAsync(string lang)
         {
             var tours = await _context.Tours

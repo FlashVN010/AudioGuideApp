@@ -8,6 +8,7 @@ namespace src.Models.DTOs
         public int TotalQrScans { get; set; }
         public int TotalAudioPlays { get; set; }
         public int ActiveVisitors { get; set; }
+        public int TotalPOIs { get; set; }
         public List<VisitsOverTimeDto> VisitsOverTime { get; set; } = new List<VisitsOverTimeDto>();
         public List<PopularPOIDto> PopularPOIs { get; set; } = new List<PopularPOIDto>();
         public List<LanguageStatDto> LanguageBreakdown { get; set; } = new List<LanguageStatDto>();

@@ -41,7 +41,12 @@ namespace src.Middleware
                 statusCode = (int)HttpStatusCode.Unauthorized;
                 error = "Unauthorized";
             }
-            else if (exception is ArgumentException || exception is KeyNotFoundException)
+            else if (exception is KeyNotFoundException)
+            {
+                statusCode = (int)HttpStatusCode.NotFound;
+                error = "NotFound";
+            }
+            else if (exception is ArgumentException)
             {
                 statusCode = (int)HttpStatusCode.BadRequest;
                 error = "BadRequest";

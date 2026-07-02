@@ -61,6 +61,7 @@ export default function DashboardPage() {
               totalQrScans: 4890,
               totalAudioPlays: 7210,
               activeVisitors: 3,
+              totalPOIs: 20,
               visitsOverTime: [
                 { date: '06-09', count: 120 },
                 { date: '06-10', count: 250 },
@@ -325,7 +326,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider">Địa điểm mở</span>
-            <p className="text-xl font-display font-extrabold text-text-primary mt-0.5">18</p>
+            <p className="text-xl font-display font-extrabold text-text-primary mt-0.5">{summary?.totalPOIs ?? 0}</p>
           </div>
         </div>
       </div>

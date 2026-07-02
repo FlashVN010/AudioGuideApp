@@ -29,8 +29,8 @@ namespace src.Services
             {
                 POIId = dto.POIId,
                 SessionId = dto.SessionId,
-                TriggerType = dto.TriggerType.ToLowerInvariant(),
-                LanguageCode = dto.LanguageCode.ToLowerInvariant(),
+                TriggerType = dto.TriggerType?.ToLowerInvariant() ?? "manual",
+                LanguageCode = dto.LanguageCode?.ToLowerInvariant() ?? "vi",
                 VisitedAt = DateTime.UtcNow
             };
 
@@ -69,6 +69,7 @@ namespace src.Services
             var totalAudioPlays = await _context.VisitLogs
                 .Where(v => v.TriggerType.ToLower() == "geofence" || v.TriggerType.ToLower() == "manual")
                 .CountAsync();
+            var totalPOIs = await _context.POIs.CountAsync(p => p.ApprovalStatus == "approved" && p.DeletedAt == null);
 
             // Visits over time (last 30 days)
             var cutoff = DateTime.UtcNow.AddDays(-30);
@@ -124,6 +125,7 @@ namespace src.Services
                 TotalQrScans = totalQrScans,
                 TotalAudioPlays = totalAudioPlays,
                 ActiveVisitors = activeVisitorsCount,
+                TotalPOIs = totalPOIs,
                 VisitsOverTime = visitsOverTime,
                 PopularPOIs = popularPOIs,
                 LanguageBreakdown = langBreakdown

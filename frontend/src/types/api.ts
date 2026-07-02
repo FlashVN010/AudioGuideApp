@@ -3,6 +3,7 @@ export interface AnalyticsSummary {
   totalQrScans: number;
   totalAudioPlays: number;
   activeVisitors: number;
+  totalPOIs: number;
   visitsOverTime: { date: string; count: number }[];
   popularPOIs: { poiId: number; poiName: string; count: number }[];
   languageBreakdown: { languageCode: string; count: number }[];

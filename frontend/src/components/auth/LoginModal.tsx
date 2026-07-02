@@ -58,7 +58,11 @@ const TAB_CONTENT = {
   },
 } as const;
 
-export default function LoginPage() {
+interface LoginPageProps {
+  onClose?: () => void;
+}
+
+export default function LoginPage({ onClose }: LoginPageProps) {
   const { login } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();

@@ -24,11 +24,6 @@ namespace src.Data
                 };
                 await context.AdminUsers.AddAsync(adminUser);
             }
-            else
-            {
-                adminUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@1234");
-                context.AdminUsers.Update(adminUser);
-            }
             // Fix existing AudioFiles with 0 duration by parsing physical files
             var zeroDurationAudios = await context.AudioFiles.Where(a => a.DurationSeconds == 0).ToListAsync();
             if (zeroDurationAudios.Any())

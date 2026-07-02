@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 interface GeolocationPosition {
   latitude: number;
   longitude: number;
+  accuracy: number;
 }
 
 interface GeolocationState {
@@ -53,6 +54,7 @@ export function useGeolocation(options: PositionOptions = DEFAULT_OPTIONS) {
         position: {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
+          accuracy: pos.coords.accuracy,
         },
         accuracy: pos.coords.accuracy,
         error: null,
