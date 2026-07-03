@@ -65,6 +65,7 @@ namespace src.Services
             var activeVisitorsCount = ActiveSessions.Count;
 
             var totalVisits = await _context.VisitLogs.CountAsync();
+            var totalPOIs = await _context.POIs.CountAsync(p => p.DeletedAt == null);
             var totalQrScans = await _context.VisitLogs.CountAsync(v => v.TriggerType.ToLower() == "qr");
             var totalAudioPlays = await _context.VisitLogs
                 .Where(v => v.TriggerType.ToLower() == "geofence" || v.TriggerType.ToLower() == "manual")
@@ -121,6 +122,7 @@ namespace src.Services
             return new AnalyticsSummaryDto
             {
                 TotalVisits = totalVisits,
+                TotalPOIs = totalPOIs,
                 TotalQrScans = totalQrScans,
                 TotalAudioPlays = totalAudioPlays,
                 ActiveVisitors = activeVisitorsCount,

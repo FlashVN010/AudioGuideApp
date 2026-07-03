@@ -65,6 +65,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Sorting state for POI table
   const [sortField, setSortField] = useState<keyof PoiStatsItem>('scans');
@@ -72,52 +74,26 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let isSubscribed = true;
+
     const loadDashboardData = async () => {
       setLoading(true);
+      setLoadError(null);
       try {
         const [statsRes, chartsRes] = await Promise.all([
-          ownerApi.getOwnerDashboard().catch((e) => {
-            console.warn('Dashboard stats API missing/failed, using fallback:', e);
-            return {
-              data: {
-                totalPOIs: 1,
-                totalViews: 1420,
-                totalAudioPlays: 843,
-                totalQrScans: 512,
-                totalBookmarks: 250,
-                poiStats: [
-                  { id: 1, name: 'Quán Demo', scans: 512, views: 1420, audioPlays: 843, bookmarks: 250 }
-                ],
-                languages: [
-                  { code: 'vi', count: 1200, percentage: 85 },
-                  { code: 'en', count: 220, percentage: 15 }
-                ]
-              },
-            };
-          }),
-          ownerApi.getOwnerDashboardCharts().catch((e) => {
-            console.warn('Dashboard charts API missing/failed, using fallback:', e);
-            return {
-              data: [
-                { date: '06-09', count: 42 },
-                { date: '06-10', count: 65 },
-                { date: '06-11', count: 52 },
-                { date: '06-12', count: 88 },
-                { date: '06-13', count: 110 },
-                { date: '06-14', count: 95 },
-                { date: '06-15', count: 120 },
-              ],
-            };
-          }),
+          ownerApi.getOwnerDashboard(),
+          ownerApi.getOwnerDashboardCharts(),
         ]);
 
         if (isSubscribed) {
-          setStats(statsRes.data);
-          setChartData(chartsRes.data || []);
+          setStats(statsRes.data as DashboardStats);
+          setChartData((chartsRes.data as ChartDataItem[]) || []);
         }
       } catch (err: any) {
         console.error('Failed to load dashboard:', err);
-        toastError(t('owner.dashboardLoadError', 'Không thể tải thống kê lúc này'));
+        if (isSubscribed) {
+          setLoadError(t('owner.dashboardLoadError', 'Không thể tải thống kê lúc này'));
+          toastError(t('owner.dashboardLoadError', 'Không thể tải thống kê lúc này'));
+        }
       } finally {
         if (isSubscribed) setLoading(false);
       }
@@ -125,10 +101,20 @@ export default function DashboardPage() {
 
     loadDashboardData();
 
+    // Tự động tải lại khi người dùng quay lại tab (vd: vừa quét QR bằng điện thoại
+    // xong quay lại xem dashboard trên trình duyệt khác/tab khác)
+    const handleFocus = () => loadDashboardData();
+    window.addEventListener('focus', handleFocus);
+
+    // Poll định kỳ mỗi 15s để số liệu cập nhật gần như real-time
+    const intervalId = window.setInterval(loadDashboardData, 15000);
+
     return () => {
       isSubscribed = false;
+      window.removeEventListener('focus', handleFocus);
+      window.clearInterval(intervalId);
     };
-  }, [t, toastError]);
+  }, [t, toastError, refreshKey]);
 
   const handleSort = (field: keyof PoiStatsItem) => {
     if (sortField === field) {
@@ -260,7 +246,7 @@ export default function DashboardPage() {
     );
   };
 
-  if (loading) {
+  if (loading && !stats) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-text-secondary gap-3">
         <Loader2 className="animate-spin text-primary" size={28} />
@@ -269,16 +255,40 @@ export default function DashboardPage() {
     );
   }
 
+  if (loadError && !stats) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 text-text-secondary gap-3">
+        <span className="text-xs font-semibold text-danger">{loadError}</span>
+        <button
+          onClick={() => setRefreshKey((k) => k + 1)}
+          className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-hover active:scale-95 transition-all"
+        >
+          {t('common.retry', 'Thử lại')}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Title */}
-      <div>
-        <h2 className="font-display font-extrabold text-xl tracking-tight text-text-primary">
-          {t('owner.dashboard.title', 'Thống Kê Hoạt Động')}
-        </h2>
-        <p className="text-xs text-text-secondary">
-          {t('owner.dashboard.desc', 'Xem lượt tiếp cận quán và dịch vụ của bạn trên bản đồ Vĩnh Khánh')}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="font-display font-extrabold text-xl tracking-tight text-text-primary">
+            {t('owner.dashboard.title', 'Thống Kê Hoạt Động')}
+          </h2>
+          <p className="text-xs text-text-secondary">
+            {t('owner.dashboard.desc', 'Xem lượt tiếp cận quán và dịch vụ của bạn trên bản đồ Vĩnh Khánh')}
+          </p>
+        </div>
+        <button
+          onClick={() => setRefreshKey((k) => k + 1)}
+          disabled={loading}
+          className="shrink-0 px-3 py-2 rounded-xl border border-border bg-card text-xs font-semibold text-text-primary hover:bg-surface-alt active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1.5"
+        >
+          <Loader2 size={14} className={loading ? 'animate-spin' : 'hidden'} />
+          {t('common.refresh', 'Làm mới')}
+        </button>
       </div>
 
       {/* Stats Grid */}

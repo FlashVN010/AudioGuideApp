@@ -1,5 +1,6 @@
 export interface AnalyticsSummary {
   totalVisits: number;
+  totalPOIs: number;
   totalQrScans: number;
   totalAudioPlays: number;
   activeVisitors: number;

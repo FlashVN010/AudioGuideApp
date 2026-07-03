@@ -5,6 +5,7 @@ namespace src.Models.DTOs
     public class AnalyticsSummaryDto
     {
         public int TotalVisits { get; set; }
+        public int TotalPOIs { get; set; }
         public int TotalQrScans { get; set; }
         public int TotalAudioPlays { get; set; }
         public int ActiveVisitors { get; set; }

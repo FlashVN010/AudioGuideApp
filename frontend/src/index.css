@@ -1,37 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 /* ============================================
-   Minimal Atlas — Design System
-   Aesthetic: Clean / Swiss / Editorial
+   Phố Vĩnh Khánh Rực Rỡ — Design System
+   Aesthetic: Playful / Vibrant / Candy-rounded
+   Cảm hứng: đèn lồng phố ẩm thực về đêm, ớt, chanh
    ============================================ */
 
 @theme {
-  /* — Neutral Palette — */
-  --color-primary:        oklch(0.18 0.00 0);
-  --color-primary-light:  oklch(0.35 0.00 0);
-  --color-primary-hover:  oklch(0.10 0.00 0);
-  --color-secondary:      oklch(0.50 0.00 0);
-  --color-secondary-light:oklch(0.65 0.00 0);
-  --color-accent:         oklch(0.45 0.00 0);
-  --color-accent-light:   oklch(0.70 0.00 0);
-  --color-danger:         oklch(0.45 0.18 20);
-  --color-danger-light:   oklch(0.65 0.10 20);
+  /* — Vibrant Palette — */
+  --color-primary:        oklch(0.66 0.21 25);   /* Ớt Đỏ  – coral/chili red */
+  --color-primary-light:  oklch(0.76 0.17 30);
+  --color-primary-hover:  oklch(0.58 0.22 22);
+  --color-secondary:      oklch(0.60 0.20 320);  /* Đèn Lồng Tím – magenta/purple */
+  --color-secondary-light:oklch(0.72 0.17 320);
+  --color-accent:         oklch(0.84 0.17 95);   /* Chanh Vàng – citrus yellow */
+  --color-accent-light:   oklch(0.90 0.13 100);
+  --color-mint:           oklch(0.78 0.14 175);  /* Rau Thơm – herb mint (chip màu phụ) */
+  --color-danger:         oklch(0.58 0.22 25);
+  --color-danger-light:   oklch(0.72 0.16 25);
 
   /* — Surface — */
-  --color-surface:        oklch(0.98 0.00 0);
-  --color-surface-alt:    oklch(0.95 0.00 0);
-  --color-card:           oklch(1.00 0.00 0);
-  --color-text-primary:   oklch(0.12 0.00 0);
-  --color-text-secondary: oklch(0.42 0.00 0);
-  --color-text-muted:     oklch(0.62 0.00 0);
-  --color-border:         oklch(0.90 0.00 0);
-  --color-border-hover:   oklch(0.75 0.00 0);
+  --color-surface:        oklch(0.97 0.015 75);
+  --color-surface-alt:    oklch(0.94 0.025 75);
+  --color-card:           oklch(0.995 0.005 85);
+  --color-text-primary:   oklch(0.24 0.03 320);
+  --color-text-secondary: oklch(0.44 0.03 310);
+  --color-text-muted:     oklch(0.60 0.02 300);
+  --color-border:         oklch(0.90 0.03 60);
+  --color-border-hover:   oklch(0.78 0.06 40);
 
   /* — Typography — */
-  --font-display: 'Inter', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
-  --font-mono:    'DM Mono', monospace;
+  --font-display: 'Baloo 2', system-ui, sans-serif;
+  --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono:    'Space Mono', monospace;
 
   /* — Type scale — */
   --text-xs:   clamp(0.688rem, 0.65rem + 0.2vw,  0.75rem);
@@ -45,30 +47,31 @@
   /* — Spacing — */
   --spacing-page: clamp(1rem, 0.5rem + 2vw, 1.75rem);
 
-  /* — Radius (sharp, editorial) — */
-  --radius-sm:   3px;
-  --radius-md:   5px;
-  --radius-lg:   8px;
-  --radius-xl:   12px;
+  /* — Radius (candy-rounded, bo tròn nhiều) — */
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   22px;
+  --radius-xl:   30px;
   --radius-full: 9999px;
 
-  /* — Shadows (very subtle) — */
-  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.05);
-  --shadow-md: 0 2px 8px  oklch(0 0 0 / 0.07);
-  --shadow-lg: 0 4px 16px oklch(0 0 0 / 0.08);
-  --shadow-xl: 0 8px 32px oklch(0 0 0 / 0.10);
+  /* — Shadows (soft, tinted with primary hue) — */
+  --shadow-sm: 0 2px 6px  oklch(0.66 0.21 25 / 0.10);
+  --shadow-md: 0 6px 16px oklch(0.66 0.21 25 / 0.14);
+  --shadow-lg: 0 10px 28px oklch(0.60 0.20 320 / 0.16);
+  --shadow-xl: 0 18px 44px oklch(0.60 0.20 320 / 0.20);
 
-  /* — Easing — */
+  /* — Easing (bouncy) — */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* — Animations — */
   --animate-fade-in:       fade-in       0.3s var(--ease-out-quart) both;
-  --animate-slide-up:      slide-up      0.35s var(--ease-out-quart) both;
+  --animate-slide-up:      slide-up      0.35s var(--ease-bounce) both;
   --animate-slide-in-top:  slide-in-top  0.28s var(--ease-out-quint) both;
   --animate-slide-in-right:slide-in-right 0.28s var(--ease-out-quint) both;
-  --animate-scale-in:      scale-in      0.25s var(--ease-out-quart) both;
+  --animate-scale-in:      scale-in      0.25s var(--ease-bounce) both;
   --animate-shimmer:        shimmer      1.6s infinite linear;
   --animate-pulse-ring:    pulse-ring    2s   infinite ease-out;
   --animate-progress:      progress-bar  4s   linear   both;
@@ -90,7 +93,7 @@
     to   { opacity: 1; transform: translateX(0); }
   }
   @keyframes scale-in {
-    from { opacity: 0; transform: scale(0.95); }
+    from { opacity: 0; transform: scale(0.9); }
     to   { opacity: 1; transform: scale(1); }
   }
   @keyframes shimmer {
@@ -115,7 +118,7 @@
     font-family: var(--font-body);
     font-size: 16px;
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
     color: var(--color-text-primary);
     background-color: var(--color-surface);
     -webkit-font-smoothing: antialiased;
@@ -127,17 +130,27 @@
     margin: 0;
     min-height: 100dvh;
     line-height: 1.55;
+    background:
+      radial-gradient(circle at top left, oklch(0.84 0.17 95 / 0.35), transparent 32%),
+      radial-gradient(circle at top right, oklch(0.60 0.20 320 / 0.14), transparent 30%),
+      radial-gradient(circle at bottom left, oklch(0.78 0.14 175 / 0.14), transparent 34%),
+      linear-gradient(180deg, oklch(0.985 0.01 85), oklch(0.96 0.02 75));
+    background-attachment: fixed;
+  }
+
+  #root {
+    min-height: 100dvh;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.025em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     line-height: 1.15;
   }
 
   ::selection {
-    background-color: oklch(0.18 0 0 / 0.12);
+    background-color: oklch(0.66 0.21 25 / 0.20);
     color: var(--color-text-primary);
   }
 
@@ -166,21 +179,21 @@
 
 /* ── Dark Mode ── */
 .dark {
-  --color-surface:         oklch(0.10 0.00 0);
-  --color-surface-alt:     oklch(0.14 0.00 0);
-  --color-card:            oklch(0.16 0.00 0);
-  --color-text-primary:    oklch(0.94 0.00 0);
-  --color-text-secondary:  oklch(0.68 0.00 0);
-  --color-text-muted:      oklch(0.48 0.00 0);
-  --color-border:          oklch(0.24 0.00 0);
-  --color-border-hover:    oklch(0.36 0.00 0);
-  --color-primary:         oklch(0.92 0.00 0);
-  --color-primary-light:   oklch(0.75 0.00 0);
-  --color-primary-hover:   oklch(1.00 0.00 0);
-  --shadow-sm: 0 1px 2px  oklch(0 0 0 / 0.35);
-  --shadow-md: 0 2px 8px  oklch(0 0 0 / 0.45);
-  --shadow-lg: 0 4px 16px oklch(0 0 0 / 0.50);
-  --shadow-xl: 0 8px 32px oklch(0 0 0 / 0.55);
+  --color-surface:         oklch(0.19 0.02 300);
+  --color-surface-alt:     oklch(0.23 0.025 300);
+  --color-card:            oklch(0.25 0.025 300);
+  --color-text-primary:    oklch(0.96 0.01 90);
+  --color-text-secondary:  oklch(0.78 0.02 90);
+  --color-text-muted:      oklch(0.58 0.02 300);
+  --color-border:          oklch(0.34 0.03 300);
+  --color-border-hover:    oklch(0.44 0.04 300);
+  --color-primary:         oklch(0.70 0.20 25);
+  --color-primary-light:   oklch(0.78 0.16 30);
+  --color-primary-hover:   oklch(0.62 0.22 22);
+  --shadow-sm: 0 2px 6px  oklch(0 0 0 / 0.35);
+  --shadow-md: 0 6px 16px oklch(0 0 0 / 0.42);
+  --shadow-lg: 0 10px 28px oklch(0 0 0 / 0.48);
+  --shadow-xl: 0 18px 44px oklch(0 0 0 / 0.55);
 }
 
 .dark html, .dark body, html.dark, html.dark body {

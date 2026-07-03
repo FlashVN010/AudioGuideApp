@@ -53,63 +53,8 @@ export default function DashboardPage() {
     if (!silent) setLoading(true);
     try {
       const [sumRes, logsRes] = await Promise.all([
-        analyticsApi.getDashboard().catch((e) => {
-          console.warn('Analytics API failed, using fallback:', e);
-          return {
-            data: {
-              totalVisits: 14890,
-              totalQrScans: 4890,
-              totalAudioPlays: 7210,
-              activeVisitors: 3,
-              visitsOverTime: [
-                { date: '06-09', count: 120 },
-                { date: '06-10', count: 250 },
-                { date: '06-11', count: 320 },
-                { date: '06-12', count: 280 },
-                { date: '06-13', count: 420 },
-                { date: '06-14', count: 580 },
-                { date: '06-15', count: 620 },
-              ],
-              popularPOIs: [
-                { poiId: 1, poiName: 'Ốc Oanh', count: 1240 },
-                { poiId: 2, poiName: 'Lẩu Bò Khu Nhà Cháy', count: 980 },
-                { poiId: 3, poiName: 'Bánh Mì Huỳnh Hoa', count: 710 },
-              ],
-              languageBreakdown: [
-                { languageCode: 'vi', count: 9800 },
-                { languageCode: 'en', count: 5090 },
-              ],
-            },
-          };
-        }),
-        adminApi.getAuditLogs().catch((e) => {
-          console.warn('Audit logs API failed, using fallback:', e);
-          return {
-            data: [
-              {
-                id: 1,
-                userName: 'admin',
-                action: 'APPROVE_OWNER',
-                details: 'Approved owner account "Quan Oc Oanh"',
-                createdAt: new Date(Date.now() - 3600000).toISOString(),
-              },
-              {
-                id: 2,
-                userName: 'quanocoanh',
-                action: 'CREATE_POI',
-                details: 'Registered POI "Oc Oanh - Vinh Khanh"',
-                createdAt: new Date(Date.now() - 7200000).toISOString(),
-              },
-              {
-                id: 3,
-                userName: 'admin',
-                action: 'GENERATE_QR',
-                details: 'Generated QR Code for POI ID 1',
-                createdAt: new Date(Date.now() - 10800000).toISOString(),
-              },
-            ],
-          };
-        }),
+        analyticsApi.getDashboard(),
+        adminApi.getAuditLogs(),
       ]);
 
       setSummary(sumRes.data);
@@ -325,7 +270,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider">Địa điểm mở</span>
-            <p className="text-xl font-display font-extrabold text-text-primary mt-0.5">18</p>
+            <p className="text-xl font-display font-extrabold text-text-primary mt-0.5">{summary?.totalPOIs ?? 0}</p>
           </div>
         </div>
       </div>
@@ -342,7 +287,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Audit Logs */}
+        {/* Audit Logs 
         <div className="bg-card border border-border rounded-2xl shadow-sm p-5 sm:p-6 flex flex-col gap-4 overflow-hidden h-[340px]">
           <h3 className="font-display font-bold text-sm sm:text-base text-text-primary border-b border-border/40 pb-2.5 flex items-center gap-1.5 shrink-0">
             <FileText size={16} className="text-primary" />
@@ -368,7 +313,8 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-      </div>
+      </div>*/}
+
 
       {/* Grid: Popular POIs & Language Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -403,7 +349,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Language Breakdown */}
+
+        {/* Language Breakdown 
         <div className="bg-card border border-border rounded-2xl shadow-sm p-5 sm:p-6 flex flex-col gap-4">
           <h3 className="font-display font-bold text-sm sm:text-base text-text-primary border-b border-border/40 pb-2.5">
             Ngôn ngữ sử dụng (Languages)
@@ -442,11 +389,11 @@ export default function DashboardPage() {
                 );
               })
             ) : (
-              <div className="py-6 text-center text-text-muted">Chưa có dữ liệu ngôn ngữ.</div>
+              <div className="py-6 text-center text-text-muted"></div>
             )}
           </div>
-        </div>
+        </div>*/}
       </div>
     </div>
-  );
+  );  
 }
